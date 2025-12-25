@@ -11,6 +11,8 @@ const mongoose = require("mongoose");
 // ===================== APP =====================
 const app = express();
 const server = http.createServer(app);
+
+// Socket.IO mit CORS für Vercel-Frontend
 const io = new Server(server, {
   cors: {
     origin: "https://bier-scoreboard.vercel.app", // deine Frontend-URL
@@ -18,6 +20,16 @@ const io = new Server(server, {
   }
 });
 
+// ===================== MIDDLEWARE =====================
+// JSON Body Parsing
+app.use(express.json());
+
+// CORS für Express-API
+const cors = require("cors");
+app.use(cors({
+  origin: "https://bier-scoreboard.vercel.app",
+  methods: ["GET", "POST"]
+}));
 
 // Statische Dateien serven
 app.use(express.static(path.join(__dirname, "../public")));
@@ -31,6 +43,7 @@ app.get("/", (_, res) =>
 app.get("/service", (_, res) =>
   res.sendFile(path.join(__dirname, "../public/service/index.html"))
 );
+
 
 
 // ===================== MONGODB =====================
