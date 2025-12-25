@@ -359,10 +359,11 @@ window.addEventListener('resize', () => {
   startMarqueeIfNeeded();
 });
 
-window.socket = io();
+const socket = io("https://bier-scoreboard-backend.onrender.com");
+window.socket = socket;
+
 
 socket.on("updateScores", teamsFromDB => {
-  // DB → Scoreboard-Format umwandeln
   TEAMS = teamsFromDB.map(t => ({
     name: t.name,
     punkte: t.points,
