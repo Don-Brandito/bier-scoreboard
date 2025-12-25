@@ -1,0 +1,744 @@
+/* ===========================================
+   GLOBAL – Dark Style wie Scoreboard
+=========================================== */
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  background: #111;
+  color: #fff;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+
+/* ===========================================
+   Main
+=========================================== */
+
+main {
+  flex: 1;           /* nimmt den Platz zwischen Header und Footer ein */
+  overflow: hidden;  /* verhindert, dass Footer nach unten rutscht */
+  display: flex;     /* damit links + rechts nebeneinander funktionieren */
+}
+
+/* ===========================================
+   HEADER – Scoreboard-Look
+=========================================== */
+
+header {
+  background: #440000;
+  padding: 5px 0;
+  border-bottom: 4px solid #aa0000;
+}
+
+/* Gesamte Header-Leiste */
+.header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+/* LINKS: Logo + Titel */
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;  /* Abstand zwischen Logo und Titel */
+}
+
+.header-logo {
+  height: 60px;
+  width: auto;
+}
+
+/* RECHTS: Storno + Button */
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.storno-indicator {
+  padding: 6px 12px;
+  background: #aa0000;
+  color: #fff;
+  font-weight: bold;
+  border-radius: 6px;
+}
+
+.hidden {
+  display: none;
+}
+
+
+/* ===========================================
+   GRID – gleiche Rundung & Farben
+=========================================== */
+
+.drinks-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 18px;
+  padding: 22px;
+}
+
+/* ===========================================
+   TILE – Scoreboard-Style
+=========================================== */
+
+.drink-tile {
+  background: rgba(0,0,0,0.55);
+  border-radius: 16px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 0 18px rgba(0,0,0,0.55);
+  transition: transform 0.15s, box-shadow 0.15s;
+  height: 180px;
+  border: 2px solid rgba(255,255,255,0.1);
+}
+
+.drink-tile:active {
+  transform: scale(0.95);
+  box-shadow: 0 0 22px rgba(255,255,255,0.15);
+}
+
+/* ===========================================
+   ICONS – stabil & gleich groß (wie besprochen)
+=========================================== */
+
+.drink-icon,
+.drink-tile img {
+  width: 64px !important;
+  height: 64px !important;
+  max-width: 64px !important;
+  max-height: 64px !important;
+
+  object-fit: contain;
+  display: block;
+  margin: 0 auto 10px auto;
+}
+
+
+/* ===========================================
+   NAME
+=========================================== */
+
+.drink-name {
+  font-size: 1rem;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+/* ===========================================
+   COUNTER – Scoreboard-ähnlich
+=========================================== */
+
+.drink-count {
+  font-size: 1.5rem;
+  font-weight: 700;
+  background: rgba(255,255,255,0.1);
+  color: #fff;
+  padding: 6px 18px;
+  border-radius: 12px;
+  min-width: 40px;
+  text-align: center;
+  border: 1px solid rgba(255,255,255,0.30);
+}
+
+/* ===========================================
+   STORNO – Rot wie Scoreboard
+=========================================== */
+
+.drink-tile.storno-active {
+  border-color: #aa0000 !important;
+  background: rgba(100,0,0,0.5) !important;
+  box-shadow: 0 0 18px rgba(200,0,0,0.4);
+}
+
+/* ===========================================
+   FOOTER – Scoreboard-Look
+=========================================== */
+
+footer {
+  background: #440000;
+  padding: 5px;
+  border-top: 4px solid #aa0000;
+  padding-left: 20px;   /* gleicher Abstand wie Header */
+  padding-right: 20px;  /* optional, sieht sauber aus */
+}
+
+
+
+.footer-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.btn {
+  padding: 8px 16px;
+  background: #550000;
+  border: none;
+  border-radius: 6px;
+  color: #fff;
+  cursor: pointer;
+}
+
+.btn.danger {
+  min-height: 48px;
+}
+
+
+.btn:hover {
+  background: #770000;
+}
+
+.primary {
+  background: #aa0000;
+    width: 200px;       /* gleiche Breite */
+  height: 48px;       /* gleiche Höhe */
+  font-size: 0.8rem;  /* gleiche Schriftgröße */
+  font-weight: 700;   /* fett */
+  border-radius: 10px; /* gleiche Rundung */
+  text-align: center;
+}
+.secondary {
+  background: #666;
+    width: 200px;       /* gleiche Breite */
+  height: 48px;       /* gleiche Höhe */
+  font-size: 0.8rem;  /* gleiche Schriftgröße */
+  font-weight: 700;   /* fett */
+  border-radius: 10px; /* gleiche Rundung */
+  text-align: center;
+}
+.toggle-storno {
+  width: 200px;       /* gleiche Breite */
+  height: 48px;       /* gleiche Höhe */
+  font-size: 0.8rem;  /* gleiche Schriftgröße */
+  font-weight: 700;   /* fett */
+  border-radius: 10px; /* gleiche Rundung */
+  text-align: center;
+}
+.danger {
+  width: 200px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  border-radius: 10px;
+  text-align: center;
+}
+
+/* Buttons innerhalb der Kachel komplett entfernen */
+.btn-plus,
+.btn-bottle {
+  display: none !important;
+}
+
+/* NAME – weiß, fett */
+.drink-tile .name {
+  color: #fff;
+  font-size: 1.1rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+/* Punkteanzeige ("3 PKT") */
+.drink-tile .points {
+  color: #686262;
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+  text-align: center;
+}
+
+/* COUNTER – das ist der wichtige */
+.counter-visual {
+  font-size: 1.0rem;
+  font-weight: 800;
+  color: #fff !important;
+  background: rgba(255,255,255,0.12);
+  padding: 1px 4px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.3);
+  min-width: 40px;
+  text-align: center;
+}
+
+#totalBox {
+  text-align: center;        /* sorgt dafür, dass alles zentriert ist */
+}
+
+#totalPoints {
+  font-size: 2.0rem;           /* größer – passe den Wert an */
+  font-weight: 700;          /* fett */
+  margin: 8px 0;             /* etwas Abstand oben & unten */
+}
+
+#topRight {
+    display: flex;
+    justify-content: flex-end;
+    padding-right: 20px;  /* <-- gleichen Wert einsetzen wie unten bei Buchung abschicken */
+}
+
+.footer-left {
+    padding-left: 20px;
+}
+
+/* Popup Overlay */
+.popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.75);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 5000;
+}
+
+.popup.hidden {
+  display: none;
+}
+
+.popup-content {
+  background: #222;
+  padding: 20px 30px;
+  border-radius: 14px;
+  width: 300px;
+  text-align: center;
+  box-shadow: 0 0 20px rgba(255,0,0,0.3);
+  border: 2px solid #aa0000;
+}
+
+.popup-content h2 {
+  margin-bottom: 15px;
+}
+
+.popup-content input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  margin-bottom: 15px;
+  font-size: 1rem;
+}
+
+.popup-buttons {
+  display: flex;
+  justify-content: space-between;   /* Abstand zwischen den Buttons */
+  gap: 20px;                        /* gleichmäßiger Abstand */
+  justify-content: space-between;
+}
+
+.popup-buttons .btn {
+    flex: 1;              /* beide Buttons gleich breit */
+    padding: 10px;
+}
+
+/* LINKES PANEL */
+#teamListPanel {
+  width: 270px;        /* HIER machst du die Spalte breiter */
+  background: #1a1a1a;
+  border-right: 2px solid #333;
+  overflow-y: auto;     /* Scrollbar nur für Teams */
+}
+
+#teamListPanel h3 {
+  margin-top: 0;
+  text-align: center;
+}
+
+#teamList {
+  list-style: none;
+  padding: 20px;
+  margin: 0;
+}
+
+#teamList li {
+  background: #333;
+  padding: 10px;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+#teamList li:hover {
+  background: #444;
+}
+
+#teamList li.active {
+  background: #d89b28;
+  color: black;
+}
+
+/* RECHTES PANEL (Kacheln) */
+#drinkContainer {
+  flex: 1;
+  padding: 20px;
+  overflow: hidden;     /* wichtig: NICHT scrollen */
+}
+
+.drinks-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr); /* 5 pro Reihe */
+  grid-template-rows: repeat(2, auto);   /* 2 Reihen */
+  gap: 20px;
+}
+
+#serviceMain {
+  flex: 1;
+  height: calc(100vh - 60px); /* Höhe minus Footer */
+}
+
+#service-wrapper {
+  display: flex;
+  height: 100%;
+  overflow: hidden; /* WICHTIG: verhindert Gesamtscrollen */
+}
+
+.input-hint {
+  font-size: 0.75rem;
+  color: #bbb;
+  margin-top: -8px;
+  margin-bottom: 15px;
+  text-align: center;
+  opacity: 0.8;
+}
+
+#logo-bg {
+  position: absolute;   /* im Service Panel besser als fixed */
+  top: 50%;
+  left: 50%;
+  width: 70vmin;
+  height: 70vmin;
+  transform: translate(-50%, -50%);
+  background: url("../images/logo-bg.png") center/contain no-repeat;
+  opacity: 0.15;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.drinks-grid {
+  position: relative;
+  z-index: 2;
+}
+
+.popup-inner {
+  width: 220px;      /* exakt die Breite der grauen Linie */
+  margin: 0 auto;    /* zentriert im Popup */
+}
+
+.divider {
+  width: 100%;
+  height: 1px;
+  background: #777;
+  margin: 12px 0;
+}
+
+.password-input {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.popup-narrow {
+  width: 220px;      /* exakt wie deine graue Linie */
+  margin: 0 auto;
+}
+
+.popup-narrow hr {
+  width: 100%;
+}
+
+.popup-narrow input[type="password"] {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.popup-narrow input {
+  width: 100%;
+  box-sizing: border-box;
+
+  /* 🔥 diese drei Zeilen sind entscheidend */
+  padding: 10px 12px;
+  border: 1px solid #777;
+  font-size: 0.9rem;
+  line-height: 1.2;
+}
+
+
+/* =====================================================
+   TABLET / iPAD (10") – RESPONSIVE SCALE
+   ===================================================== */
+@media (max-width: 1024px) {
+
+  body {
+    font-size: 14px;
+  }
+
+  header h1 {
+    font-size: 0.85rem;
+    line-height: 1.2;
+  }
+
+  /* HEADER */
+  .header-inner {
+    padding: 8px 12px;
+  }
+
+  .header-logo {
+    height: 36px;
+  }
+
+  /* MAIN LAYOUT */
+  #service-wrapper {
+    gap: 10px;
+  }
+
+  /* TEAM LIST */
+  #teamListPanel {
+    width: 180px;
+    min-width: 180px;
+  }
+
+  #teamList li {
+    font-size: 0.8rem;
+    padding: 6px 8px;
+  }
+
+  /* DRINK GRID */
+@media (max-width: 1024px) {
+
+  .drink-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+  }
+}
+
+
+  .drink-tile {
+    padding: 6px;
+  }
+
+  .drink-tile .icon img {
+    width: 32px;
+    height: 32px;
+  }
+
+  .drink-tile .name {
+    font-size: 0.7rem;
+  }
+
+  .drink-tile .points {
+    font-size: 0.65rem;
+  }
+
+  .counter-visual {
+    font-size: 0.9rem;
+  }
+
+  /* FOOTER */
+  footer {
+    padding: 6px 10px;
+  }
+
+  .footer-inner {
+    gap: 10px;
+  }
+
+  .footer-inner .btn {
+    font-size: 0.75rem;
+    padding: 6px 10px;
+    min-height: 36px;
+  }
+
+  #totalBox {
+    transform: scale(0.9);
+  }
+
+  /* POPUPS */
+  .popup-content {
+    max-width: 90vw;
+    padding: 16px;
+  }
+
+  .popup-narrow {
+    width: 200px;
+  }
+
+  .popup-buttons .btn {
+    min-height: 36px;
+    font-size: 0.75rem;
+  }
+}
+
+@media (max-width: 1024px) {
+
+  .btn {
+    width: auto !important;
+    min-width: unset !important;
+    max-width: 100%;
+
+    padding: 6px 10px !important;
+    font-size: 0.75rem !important;
+    min-height: 36px !important;
+    height: auto !important;
+    line-height: 1.2;
+  }
+}
+
+@media (max-width: 1024px) {
+
+  .drink-btn {
+    padding: 6px;
+    min-height: unset;
+    height: auto;
+
+    font-size: 0.7rem;
+    line-height: 1.1;
+
+    border-radius: 10px;
+  }
+}
+
+@media (max-width: 1024px) {
+
+  .drink-btn img,
+  .drink-btn svg {
+    width: 36px;
+    height: 36px;
+  }
+}
+
+@media (max-width: 1024px) {
+
+  .drink-btn i {
+    font-size: 1.8rem;
+  }
+}
+
+@media (max-width: 1024px) {
+
+  .drink-name {
+    font-size: 0.7rem;
+    margin-top: 4px;
+  }
+
+  .drink-points {
+    font-size: 0.65rem;
+  }
+}
+
+@media (max-width: 1024px) {
+
+  .drink-tile {
+    height: auto !important;
+    min-height: unset !important;
+
+    padding: 6px;
+    gap: 4px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+}
+
+@media (max-width: 1024px) {
+
+  .drink-tile .icon {
+    width: auto;
+    height: auto;
+  }
+
+  .drink-tile .icon img {
+    width: 32px !important;
+    height: 32px !important;
+    max-width: 100%;
+    max-height: 100%;
+  }
+}
+
+/* Team-Buttons: dynamische Breite für 20 Zeichen */
+@media (max-width: 1024px) {
+
+  #teamListPanel .btn,
+  #teamListPanel .btn.primary,
+  #teamListPanel .btn.secondary,
+  #teamListPanel .btn.danger {
+    width: min(20ch, 100%) !important; /* max 20 Zeichen oder volle Breite */
+    padding: 6px 10px;
+    font-size: 0.75rem;
+    line-height: 1.2;
+    box-sizing: border-box;
+  }
+}
+
+@media (max-width: 1024px) {
+  #teamListPanel .btn {
+    width: max-content;
+    min-width: 20ch; /* sichert Platz für 20 Zeichen */
+  }
+}
+
+#editTeamName,
+#teamNameInput {
+  width: 20ch;          /* Platz für 20 Zeichen */
+  max-width: 100%;      /* schrumpft auf kleinen Bildschirmen */
+  box-sizing: border-box; 
+  padding: 6px 10px;
+  font-size: 0.9rem;
+}
+
+#teamListPanel {
+  min-width: 22ch;         /* Platz für Buttons + Padding */
+  width: auto;             /* passt sich Container an */
+  max-width: 25%;          /* optional, damit es nicht zu breit wird */
+  box-sizing: border-box;
+  overflow-x: hidden;      /* horizontaler Scroll verhindern */
+  display: flex;
+  flex-direction: column;
+  gap: 6px;                /* Abstand zwischen Buttons */
+}
+
+#teamListPanel .btn {
+  min-width: 20ch;         /* Platz für 20 Zeichen */
+  max-width: 100%;          /* passt sich Container an */
+  box-sizing: border-box;
+}
+
+@media (max-width: 1024px) {
+  #stornoIndicator {
+    font-size: 0.5rem;     /* wie die Buttons */
+    padding: 6px 10px;      /* wie die Buttons */
+    min-height: 10px;
+    line-height: 1.2;       /* wie Buttons */
+  }
+}
+
+@media (max-width: 1024px) {
+  #totalPoints {
+    font-size: 1.50rem;   /* kleiner, proportional zu Buttons */
+  }
+
+  #totalBox .label,
+  #totalBox .small {
+    font-size: 0.85rem;   /* Text darunter ebenfalls anpassen */
+  }
+}

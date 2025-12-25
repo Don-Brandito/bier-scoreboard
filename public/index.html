@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>D’Wädderhäx – Live Scoreboard</title>
+
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+</head>
+
+<body>
+
+  <!-- HEADER -->
+  <header id="header">
+    <img src="images/logo-colour.png" class="header-logo left" alt="">
+    <h1>Wädderhäx Drink-Score</h1>
+    <img src="images/logo-colour.png" class="header-logo right" alt="">
+  </header>
+
+  <!-- MASKS + BACKGROUND -->
+  <img src="images/mask-left.png" class="mask mask-left" alt="">
+  <img src="images/mask-right.png" class="mask mask-right" alt="">
+  <div id="logo-bg" aria-hidden="true"></div>
+
+  <!-- MAIN -->
+  <main id="scoreboard-root">
+
+    <!-- SCOREBOARD WRAPPER -->
+    <section id="scoreboard-wrap" aria-label="Scoreboard Wrapper">
+      <section id="scoreboard" aria-label="Scoreboard">
+      <div id="scoreboard-inner">
+
+        <!-- TOP 3 -->
+        <section id="top3" aria-live="polite" aria-atomic="true"></section>
+
+        <!-- MARQUEE / REST (static list) -->
+        <div class="marquee-viewport" id="marqueeViewport" aria-hidden="false">
+          <div class="marquee-track" id="marqueeTrack"></div>
+        </div>
+      </div>
+      </section>
+    </section>
+
+    <!-- CENTER SPOT (kept but will not auto-show) -->
+    <div id="centerSpot" aria-live="polite" aria-atomic="true">
+      <div id="spotBackdrop"></div>
+
+      <div class="spot-card" role="dialog" aria-hidden="true" id="spotCard">
+        <div class="spot-top">
+          <div class="spot-left">
+            <div id="spot-platz" class="spot-platz"></div>
+            <div>
+              <div id="spot-name" class="spot-name"></div>
+              <div id="spot-total-drinks" class="spot-total-drinks"></div>
+            </div>
+          </div>
+          <div id="spot-points" class="spot-points" aria-live="polite"></div>
+        </div>
+
+        <div class="spot-bottom" aria-live="polite" aria-atomic="true">
+          <div class="order-items" id="orderItems" role="list"></div>
+          <div class="order-points">
+            <div class="order-points-label">+<span id="orderPointsValue">0</span> PKT</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONFETTI CANVAS -->
+    <canvas id="confettiCanvas" aria-hidden="true"></canvas>
+
+    <!-- PUNKTEVERGABE TICKER -->
+    <aside id="punktevergabe-wrap">
+      <div class="punkte-title">Punktevergabe</div>
+      <div id="punktevergabe-inner"></div>
+      <div class="footer-bar">© D'Wädderhäx vom Mileschdoa</div>
+    </aside>
+
+  </main>
+
+  <!-- SCRIPTS -->
+   <script src="/socket.io/socket.io.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+  <script src="js/script.js"></script>
+  <script src="js/client.js"></script>
+  <script src="js/script-spot.js"></script>
+</body>
+</html>
