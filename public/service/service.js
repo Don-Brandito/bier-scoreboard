@@ -194,7 +194,7 @@ confirmEventReset.addEventListener("click", async () => {
   }
 
   try {
-    const res = await fetch("/api/admin/reset", {
+   const res = await fetch(`${API_BASE}/api/admin/reset`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ password })
@@ -242,7 +242,7 @@ saveTeam.addEventListener("click", async () => {
   const name = teamNameInput.value.trim();
   if (!name) return;
 
-  await fetch("/api/addTeam", {
+  await fetch(`${API_BASE}/api/addTeam`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ name })
@@ -275,7 +275,7 @@ renameTeamBtn.addEventListener("click", async () => {
   const newName = editTeamName.value.trim();
   if (!oldName || !newName || oldName === newName) return;
 
-  const res = await fetch("/api/renameTeam", {
+  const res = await fetch(`${API_BASE}/api/renameTeam`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ oldName, newName })
@@ -309,7 +309,7 @@ deleteTeamBtn.addEventListener("click", async () => {
   }
 
   try {
-    const res = await fetch("/api/deleteTeam", {
+    const res = await fetch(`${API_BASE}/api/deleteTeam`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name: team, password })
@@ -717,12 +717,15 @@ input.addEventListener("input", () => {
     }
 });
 
-fetch("/api/teams")
+const API_BASE = "https://bier-scoreboard-backend.onrender.com";
+
+fetch(`${API_BASE}/api/teams`)
   .then(res => res.json())
   .then(teams => {
     renderTeams(teams);
     updateTeamList(teams);
   })
   .catch(err => console.error("Teams laden fehlgeschlagen", err));
+
 
 })
