@@ -13,16 +13,19 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
 
-app.use(express.json());
-app.use(express.static(path.join(__dirname, "public")));
+// Statische Dateien serven
+app.use(express.static(path.join(__dirname, "../public")));
 
+// Frontend
 app.get("/", (_, res) =>
-  res.sendFile(path.join(__dirname, "public", "index.html"))
+  res.sendFile(path.join(__dirname, "../public/index.html"))
 );
 
+// Service-Panel
 app.get("/service", (_, res) =>
-  res.sendFile(path.join(__dirname, "public", "service", "index.html"))
+  res.sendFile(path.join(__dirname, "../public/service/index.html"))
 );
+
 
 // ===================== MONGODB =====================
 mongoose

@@ -11,7 +11,7 @@
 
   // try to connect socket.io if available
   if (typeof io !== 'undefined') {
-    const socket = io();
+    const socket = io("https://bier-scoreboard-backend.onrender.com");
     socket.on('connect', ()=> safeLog('socket connected'));
     socket.on('scoreUpdate', (teams) => {
       // expect teams: [{ name, punkte, drinks: { ... } }, ...]
