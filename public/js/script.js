@@ -12,9 +12,31 @@
 //  { platz:10, name:"Team Sturmkrähen", punkte:10, drinks:{ "Cocktail-Longdrink":1 }}
 //];
 
+// Ganz oben in script.js
+window.TEAMS = window.TEAMS || [];
+
+// ==========================
+// Globale Socket-Referenz
+// ==========================
+const socket = window.socket;
+
+// ==========================
+// TEAMS-Update vom Backend
+// ==========================
+socket.on("updateScores", teamsFromDB => {
+  // Teams aus DB → Scoreboard-Format
+  window.TEAMS = teamsFromDB.map(t => ({
+    name: t.name,
+    punkte: t.points,
+    drinks: t.drinks || {}
+  }));
+
+  // Scoreboard rendern
+  renderStatic();
+});
 
 const ICON_MAP = {
-  Bier: "bier.svg",
+  Bier: "Bier.svg",
   Radler: "Radler.svg",
   Weizen: "Weizen.svg",
   Colaweizen: "Colaweizen.svg",
@@ -29,7 +51,7 @@ const ICON_MAP = {
 
 // Getränkepunkte
 const GETRAENKE_PUNKTE = [
-  { icon: "images/bier.svg", points: 3, alt: "Bier" },
+  { icon: "images/Bier.svg", points: 3, alt: "Bier" },
   { icon: "images/Radler.svg", points: 2, alt: "Radler" },
   { icon: "images/Weizen.svg", points: 3, alt: "Weizen" },
   { icon: "images/Colaweizen.svg", points: 2, alt: "ColaWeizen" },
@@ -357,18 +379,4 @@ window.addEventListener('load', () => {
 window.addEventListener('resize', () => {
   updateScoreboardBounds();
   startMarqueeIfNeeded();
-});
-
-const socket = window.socket;
-window.socket = socket;
-
-
-socket.on("updateScores", teamsFromDB => {
-  TEAMS = teamsFromDB.map(t => ({
-    name: t.name,
-    punkte: t.points,
-    drinks: t.drinks || {}
-  }));
-
-  renderStatic();
 });

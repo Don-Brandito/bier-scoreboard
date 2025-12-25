@@ -8,12 +8,11 @@ const POINT_COUNTUP_MS = 4000;
 
 const socket = window.socket;
 
-
-
 socket.on("centerSpot", data => {
   console.log("🎯 CENTER SPOT RECEIVED", data);
   showCenterSpot(data);
 });
+
 
 
 

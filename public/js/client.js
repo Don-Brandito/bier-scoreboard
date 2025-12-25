@@ -16,22 +16,21 @@ if (typeof io !== 'undefined') {
 
   window.socket.on('connect', () => safeLog('✅ Socket verbunden:', window.socket.id));
 
-  window.socket.on('scoreUpdate', (teams) => {
-    // Teams aus Backend in global TEAMS-Array umwandeln
-    if (Array.isArray(teams)) {
-      try {
-        window.TEAMS = teams.map(t => ({
-          name: t.name,
-          punkte: t.points,
-          drinks: t.drinks || {}
-        }));
-        // Scoreboard aktualisieren
-        renderStatic();
-      } catch(e) {
-        safeLog('updateData error', e);
-      }
+window.socket.on('updateScores', (teams) => {
+  if (Array.isArray(teams)) {
+    try {
+      window.TEAMS = teams.map(t => ({
+        name: t.name,
+        punkte: t.points,
+        drinks: t.drinks || {}
+      }));
+      renderStatic();
+    } catch(e) {
+      safeLog('updateScores error', e);
     }
-  });
+  }
+});
+
 } else {
   safeLog('Socket.IO nicht gefunden – Demo-Modus aktiv.');
 }
