@@ -11,7 +11,13 @@ const mongoose = require("mongoose");
 // ===================== APP =====================
 const app = express();
 const server = http.createServer(app);
-const io = new Server(server);
+const io = new Server(server, {
+  cors: {
+    origin: "https://bier-scoreboard.vercel.app", // deine Frontend-URL
+    methods: ["GET", "POST"]
+  }
+});
+
 
 // Statische Dateien serven
 app.use(express.static(path.join(__dirname, "../public")));
