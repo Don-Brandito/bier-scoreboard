@@ -359,7 +359,7 @@ window.addEventListener('resize', () => {
   startMarqueeIfNeeded();
 });
 
-const socket = io("https://bier-scoreboard-backend.onrender.com");
+const socket = window.socket;
 window.socket = socket;
 
 

@@ -10,20 +10,32 @@
   }
 
   // try to connect socket.io if available
-  if (typeof io !== 'undefined') {
-    const socket = io("https://bier-scoreboard-backend.onrender.com");
-    socket.on('connect', ()=> safeLog('socket connected'));
-    socket.on('scoreUpdate', (teams) => {
-      // expect teams: [{ name, punkte, drinks: { ... } }, ...]
-      if (Array.isArray(teams)) {
-        try {
-          updateData(teams);
-        } catch(e){ safeLog('updateData error', e); }
+if (typeof io !== 'undefined') {
+  // Einmalig global setzen
+  window.socket = io("https://bier-scoreboard-backend.onrender.com");
+
+  window.socket.on('connect', () => safeLog('✅ Socket verbunden:', window.socket.id));
+
+  window.socket.on('scoreUpdate', (teams) => {
+    // Teams aus Backend in global TEAMS-Array umwandeln
+    if (Array.isArray(teams)) {
+      try {
+        window.TEAMS = teams.map(t => ({
+          name: t.name,
+          punkte: t.points,
+          drinks: t.drinks || {}
+        }));
+        // Scoreboard aktualisieren
+        renderStatic();
+      } catch(e) {
+        safeLog('updateData error', e);
       }
-    });
-  } else {
-    safeLog('Socket.IO not found – running in demo mode.');
-  }
+    }
+  });
+} else {
+  safeLog('Socket.IO nicht gefunden – Demo-Modus aktiv.');
+}
+
 
   // Debug random update (local)
   if (btnRandom) btnRandom.addEventListener('click', ()=> {

@@ -2,9 +2,16 @@
 // service.js - Storno (Variante A) + stabile Kachel-UI
 // ===================================================================
 
-// Socket (falls vorhanden)
-let socket = null;
-if (typeof io !== "undefined") socket = io();
+// Socket global verwenden
+if (typeof io !== "undefined") {
+  window.socket = io("https://bier-scoreboard-backend.onrender.com");
+}
+const socket = window.socket; // lokale Referenz darauf
+
+if (!socket) {
+  console.warn("⚠️ Socket.IO nicht gefunden – Service läuft im Demo-Modus.");
+}
+
 
 // ----------------- Konfiguration -----------------------------------
 const drinkOrder = [
