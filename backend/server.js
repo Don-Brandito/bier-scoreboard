@@ -35,20 +35,34 @@ app.use(session({
 }));
 
 // --------------------- LOGIN ------------------------
-// Login-Seite
+// Login Seite
 app.get("/service/login", (req, res) => {
   res.sendFile(path.join(__dirname, "../public/service/login.html"));
 });
 
-// Login POST
+// Login prüfen
 app.post("/service/login", (req, res) => {
   const { password } = req.body;
   if (password === process.env.SERVICE_PASS) {
     req.session.loggedIn = true;
     return res.json({ ok: true });
+  } else {
+    return res.status(401).json({ error: "Falsches Passwort" });
   }
-  res.status(401).json({ error: "Falsches Passwort" });
 });
+
+// Middleware für Service-Schutz
+function requireLogin(req, res, next) {
+  if (req.session.loggedIn) return next();
+  res.redirect("/service/login");
+}
+
+// Service-Menü nur mit Login
+app.get("/service", requireLogin, (req, res) => {
+  res.sendFile(path.join(__dirname, "../public/service/index.html"));
+});
+
+app.use("/service", express.static(path.join(__dirname, "../public/service")));
 
 
 // ===================== MIDDLEWARE =====================
