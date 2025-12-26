@@ -104,8 +104,12 @@ app.post("/api/admin/reset", async (req, res) => {
 });
 
 // ===================== SOCKET =====================
-io.on("connection", socket => {
+io.on("connection", async socket => {
   console.log("🔌 SOCKET CONNECTED", socket.id);
+
+  // ✅ SOFORT aktuelle Teams senden
+  const teams = await Team.find().sort({ points: -1 });
+  socket.emit("updateScores", teams);
 
   socket.onAny((event, data) => {
     console.log("📡 SOCKET EVENT:", event, JSON.stringify(data));
