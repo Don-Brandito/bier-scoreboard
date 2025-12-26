@@ -1,199 +1,92 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>D'Wädderhäx - Service Scoreboard</title>
-  <link rel="stylesheet" href="./service/service.css">
-  <!-- Socket.IO Client von CDN -->
-<script src="https://bier-scoreboard-backend.onrender.com/socket.io/socket.io.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Service Login</title>
+<link rel="stylesheet" href="service.css">
+<style>
+  /* Login-spezifisch */
+  .login-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    gap: 20px;
+    position: relative;
+    z-index: 10;
+  }
+  .login-container img {
+    width: 180px;
+    height: auto;
+  }
+  .password-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    position: relative;
+  }
+  .password-row input[type="password"] {
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #777;
+    font-size: 1rem;
+  }
+  .password-row label {
+    color: #fff;
+    cursor: pointer;
+    user-select: none;
+  }
+  .show-password {
+    margin-left: 5px;
+  }
+  .primary {
+    width: 200px;
+    height: 48px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    border-radius: 10px;
+    text-align: center;
+  }
+</style>
 </head>
 <body>
 
-<header>
-  <div class="header-inner">
+<div id="logo-bg"></div> <!-- optional wie im Service -->
 
-    <!-- LINKS: Logo + Titel -->
-    <div class="header-left">
-      <img src="../images/logo-colour.png" class="header-logo left" alt="">
-      <h1>D'Wädderhäx - Service Scoreboard</h1>
-    </div>
-
-    <!-- RECHTS: Storno-Indikator + Button -->
-    <div class="header-right">
-      <div id="stornoIndicator" class="storno-indicator hidden">
-        STORNO-MODUS AKTIV
-      </div>
-
-      <button id="toggleStorno" class="btn toggle-storno">
-        Punkte-Storno
-      </button>
-      <button id="resetAllBtn" class="btn danger">
-  Event-Reset
-</button>
-
-    </div>
-
-  </div>
-</header>
-
-
-<main id="serviceMain">
-  <div id="service-wrapper">
-
-    <!-- LINKS: Teamliste -->
-    <aside id="teamListPanel">
-      <ul id="teamList"></ul>
-    </aside>
-
-    <!-- RECHTS: Getränke-Kacheln -->
-    <div id="drinkContainer">
-      <div id="logo-bg"></div>
-      <div id="drinksGrid" class="drinks-grid"></div>
-    </div>
-
-  </div>
-</main>
-
-
-
-  <footer>
-    <div class="footer-inner">
-      <div class="footer-left">
-        <button id="editTeamBtn" class="btn secondary">Team ändern</button>
-        <button id="addTeamBtn" class="btn secondary">Team hinzufügen</button>
-      </div>
-
-      <div id="totalBox">
-        <div class="label">Gesamt</div>
-        <div id="totalPoints">0</div>
-        <div class="small">Punkte</div>
-      </div>
-
-      <div class="footer-right">
-        <button id="resetOrder" class="btn secondary">Buchung zurücksetzen</button>
-        <button id="sendOrder" class="btn primary">Buchung absenden</button>
-      </div>
-
-    </div>
-  </footer>
-
-<div id="teamEditPopup" class="popup hidden" data-team="">
-  <div class="popup-content">
-    <h2 id="editTeamTitle">
-      Team bearbeiten: <span id="currentTeamName"></span>
-    </h2>
-
-    <!-- Umbenennen -->
-<div class="rename-row">
-  <div class="popup-narrow">
-    <input
-      type="text"
-      id="editTeamName"
-      maxlength="20"
-      placeholder="Neuer Teamname"
-    >
-    <div class="input-hint">(maximal 20 Zeichen erlaubt)</div>
+<div class="login-container">
+  <img src="../images/logo-colour.png" alt="Logo">
+  
+  <div class="password-row">
+    <input type="password" id="password" placeholder="Passwort">
+    <label><input type="checkbox" id="togglePass" class="show-password"> anzeigen</label>
   </div>
 
-  <button id="renameTeamBtn" class="btn primary">
-    Umbenennen
-  </button>
+  <button id="loginBtn" class="primary">Login</button>
 </div>
 
+<script>
+const togglePass = document.getElementById("togglePass");
+const passwordInput = document.getElementById("password");
 
-<div class="popup-narrow">
-  <hr>
+togglePass.addEventListener("change", () => {
+  passwordInput.type = togglePass.checked ? "text" : "password";
+});
 
-  <input
-    type="password"
-    id="deleteTeamPassword"
-    placeholder="Admin-Passwort eingeben">
-  </div>
+document.getElementById("loginBtn").addEventListener("click", async () => {
+  const res = await fetch("/service/login", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ password: passwordInput.value })
+  });
+  if (res.ok) {
+    window.location.href = "/service/panel";
+  } else {
+    alert("Falsches Passwort");
+  }
+});
+</script>
 
-     <div class="popup-buttons">
-      <button id="cancelEditTeam" class="btn secondary">Abbrechen</button>
-      <button id="deleteTeamBtn" class="btn danger">Team löschen</button>
-    </div>
-  </div>
-</div>
-
-<div id="teamPopup" class="popup hidden">
-  <div class="popup-content">
-    <h2>Neues Team hinzufügen</h2>
-    <input type="text" id="teamNameInput" maxlength="20" placeholder="Teamname eingeben">
-    <div class="input-hint">(maximal 20 Zeichen erlaubt)</div>
-    <div class="popup-buttons">
-      <button id="cancelTeam" class="btn secondary">Abbrechen</button>
-      <button id="saveTeam" class="btn primary">Speichern</button>
-    </div>
-  </div>
-</div>
-
-<div id="eventResetPopup" class="popup hidden">
-  <div class="popup-content">
-    <h2 id="eventResetTitle">
-      Event wirklich zurücksetzen?
-    </h2>
-
-    <p class="popup-warning">
-      ⚠️ Achtung: Dieser Vorgang löscht <strong>alle Teams und Punkte</strong>.
-      <br>
-      Dies kann <strong>nicht rückgängig gemacht</strong> werden.
-    </p>
-
-<div class="popup-narrow">
-  <hr>
-
-  <input
-    type="password"
-    id="eventResetPassword"
-    placeholder="Admin-Passwort eingeben">
-</div>
-
-    <div class="popup-buttons">
-      <button id="cancelEventReset" class="btn secondary">
-        Abbrechen
-      </button>
-      <button id="confirmEventReset" class="btn danger">
-        Event endgültig zurücksetzen
-      </button>
-    </div>
-  </div>
-</div>
-
-<div id="orderInfoOverlay" class="popup hidden">
-  <div class="popup-content">
-    <h2 id="orderInfoTitle"></h2>
-    <p id="orderInfoText"></p>
-
-    <div class="popup-buttons">
-      <button id="orderInfoOk" class="btn primary">
-        OK
-      </button>
-    </div>
-  </div>
-</div>
-
-
-<div id="passwordOverlay" class="popup hidden">
-  <div class="popup-content">
-    <h2 id="passwordOverlayTitle"></h2>
-    <p id="passwordOverlayText"></p>
-   <div class="popup-narrow">
-  <input
-    type="password"
-    id="passwordOverlayInput"
-    placeholder="Admin-Passwort eingeben">
-</div>
-
-    <div class="popup-buttons">
-      <button id="passwordOverlayConfirm" class="btn primary">OK</button>
-      <button id="passwordOverlayCancel" class="btn secondary">Abbrechen</button>
-    </div>
-  </div>
-</div>
-
-  <script src="./service/service.js"></script>
 </body>
 </html>
