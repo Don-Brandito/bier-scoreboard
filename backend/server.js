@@ -25,13 +25,13 @@ const io = new Server(server, {
 // ===================== SESSION =====================
 app.use(session({
   name: "service.sid",
-  secret: process.env.SERVICE_SECRET, // in .env festlegen
+  secret: process.env.SERVICE_SECRET,
   resave: false,
   saveUninitialized: false,
   cookie: {
     httpOnly: true,
     sameSite: "lax",
-    secure: true,        // HTTPS notwendig
+    secure: true,
     maxAge: 1000 * 60 * 60 * 8 // 8 Stunden
   }
 }));
@@ -46,16 +46,14 @@ app.use(cors({
 }));
 
 // ===================== LOGIN =====================
+
+// Login-Seite
 app.get("/service", (req, res) => {
-  if (req.session.loggedIn) {
-    // Schon eingeloggt → direkt zum Service-Menü
-    return res.redirect("/service/panel");
-  }
+  if (req.session.loggedIn) return res.redirect("/service/panel");
   res.sendFile(path.join(__dirname, "../public/service/index.html"));
 });
 
 // Login prüfen
-// Login prüfen (für index.html)
 app.post("/service", (req, res) => {
   const { password } = req.body;
   if (password === process.env.SERVICE_PASS) {
@@ -65,7 +63,6 @@ app.post("/service", (req, res) => {
     return res.status(401).json({ error: "Falsches Passwort" });
   }
 });
-
 
 // Middleware für Service-Schutz
 function requireLogin(req, res, next) {
@@ -78,7 +75,7 @@ app.get("/service/panel", requireLogin, (req, res) => {
   res.sendFile(path.join(__dirname, "../public/service/panel.html"));
 });
 
-// Statische Dateien für Service-Menü (CSS, JS, Bilder)
+// Statische Assets für Service-Menü, nur nach Login
 app.use("/service/assets", requireLogin, express.static(path.join(__dirname, "../public/service")));
 
 // ===================== MONGODB =====================
@@ -132,31 +129,23 @@ app.post("/api/addTeam", async (req, res) => {
   if (!name) return res.status(400).json({ error: "Name fehlt" });
 
   await Team.create({ name });
-
   const teams = await Team.find().sort({ points: -1 });
   io.emit("updateScores", teams);
-
   res.json({ ok: true });
 });
 
-// RESET
 app.post("/api/admin/reset", async (req, res) => {
   const { password } = req.body;
-
-  if (password !== process.env.ADMIN_PASS) {
-    return res.status(401).json({ error: "Falsches Passwort" });
-  }
+  if (password !== process.env.ADMIN_PASS) return res.status(401).json({ error: "Falsches Passwort" });
 
   await Team.deleteMany({});
   io.emit("updateScores", []);
-
   res.json({ ok: true });
 });
 
 // ===================== SOCKET.IO EVENTS =====================
 io.on("connection", async socket => {
   console.log("🔌 SOCKET CONNECTED", socket.id);
-
   const teams = await Team.find().sort({ points: -1 });
   socket.emit("updateScores", teams);
 
@@ -171,12 +160,9 @@ io.on("connection", async socket => {
       const field = DRINK_FIELD_MAP[label];
       if (field) inc[`drinks.${field}`] = qty;
     }
-
     await Team.updateOne({ name: team }, { $inc: inc });
-
     const teams = await Team.find().sort({ points: -1 });
     io.emit("updateScores", teams);
-
     io.emit("centerSpot", { team, total, items });
   });
 
@@ -187,9 +173,7 @@ io.on("connection", async socket => {
       const field = DRINK_FIELD_MAP[label];
       if (field) inc[`drinks.${field}`] = qty;
     }
-
     await Team.updateOne({ name: team }, { $inc: inc });
-
     const teams = await Team.find().sort({ points: -1 });
     io.emit("updateScores", teams);
   });
@@ -198,14 +182,12 @@ io.on("connection", async socket => {
 // ===================== TEAM DELETE =====================
 app.post("/api/deleteTeam", async (req, res) => {
   const { name, password } = req.body;
-
   if (password !== process.env.ADMIN_PASS) return res.status(403).json({ error: "Falsches Passwort" });
   if (!name) return res.status(400).json({ error: "Kein Team angegeben" });
 
   await Team.deleteOne({ name });
   const teams = await Team.find().sort({ points: -1 });
   io.emit("updateScores", teams);
-
   res.json({ ok: true });
 });
 
@@ -217,16 +199,11 @@ app.post("/api/renameTeam", async (req, res) => {
   const exists = await Team.findOne({ name: newName });
   if (exists) return res.status(409).json({ error: "Team existiert bereits" });
 
-  const result = await Team.updateOne(
-    { name: oldName },
-    { $set: { name: newName } }
-  );
-
+  const result = await Team.updateOne({ name: oldName }, { $set: { name: newName } });
   if (result.matchedCount === 0) return res.status(404).json({ error: "Team nicht gefunden" });
 
   const teams = await Team.find().sort({ points: -1 });
   io.emit("updateScores", teams);
-
   res.json({ ok: true });
 });
 
