@@ -107,9 +107,7 @@
       <button type="button" id="togglePassword">👁️</button>
     </div>
 
-    <div class="input-hint">Passwort anzeigen</div>
-
-    <button class="btn" id="loginBtn">Login</button>
+        <button class="btn" id="loginBtn">Login</button>
   </div>
 
   <script>
@@ -130,7 +128,7 @@
     loginBtn.addEventListener("click", () => {
       const password = passwordInput.value;
 
-      fetch("/service", {
+      fetch("https://bier-scoreboard-backend.onrender.com/service", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ password })
