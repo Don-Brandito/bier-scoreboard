@@ -4,94 +4,92 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Service Login</title>
-  <link rel="stylesheet" href="login.css">
+  <link rel="stylesheet" href="service.css">
   <style>
-    /* Basis Styles */
+    /* Login-spezifische Anpassungen */
     body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background-color: #121212; /* dunkles Theme, passend zu Scoreboard */
-      color: #fff;
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
+      background: #111;
     }
 
-    .login-container {
-      background-color: #1e1e1e;
-      padding: 40px 30px;
-      border-radius: 15px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+    .login-box {
+      background: #222;
+      border: 2px solid #aa0000;
+      border-radius: 14px;
+      padding: 30px 40px;
       text-align: center;
-      width: 300px;
+      width: 320px;
+      box-shadow: 0 0 20px rgba(255,0,0,0.3);
     }
 
-    .login-container img.logo {
-      width: 150px;
-      margin-bottom: 30px;
+    .login-box img {
+      width: 120px;
+      margin-bottom: 20px;
     }
 
-    .login-container input[type="password"],
-    .login-container input[type="text"] {
-      width: 100%;
-      padding: 12px;
-      margin: 10px 0;
-      border-radius: 8px;
-      border: none;
-      outline: none;
-      font-size: 16px;
-      background-color: #2a2a2a;
+    .login-box h2 {
       color: #fff;
+      margin-bottom: 20px;
+      font-weight: 700;
     }
 
-    .login-container button {
+    .login-box input {
       width: 100%;
-      padding: 12px;
-      margin-top: 15px;
-      border: none;
+      padding: 10px 12px;
+      margin-bottom: 15px;
       border-radius: 8px;
-      font-size: 16px;
-      cursor: pointer;
-      background-color: #e63946; /* Beispiel Farbe wie bisherige Buttons */
+      border: 1px solid #777;
+      background: #111;
       color: #fff;
-      transition: background-color 0.3s;
+      font-size: 1rem;
+      box-sizing: border-box;
     }
 
-    .login-container button:hover {
-      background-color: #d62828;
-    }
-
-    .show-password {
-      margin-top: 5px;
-      font-size: 14px;
+    .login-box .show-pass {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 6px;
+      font-size: 0.8rem;
+      color: #aaa;
+      margin-bottom: 15px;
       cursor: pointer;
-      color: #f1faee;
+      user-select: none;
+    }
+
+    .login-box button.primary {
+      width: 100%;
     }
   </style>
 </head>
 <body>
-  <div class="login-container">
-    <img src="/images/logo-colour.png" alt="Logo" class="logo">
-    <input type="password" id="passwordInput" placeholder="Passwort">
-    <div class="show-password">
+
+  <div class="login-box">
+    <img src="../images/logo-colour.png" alt="Logo">
+    <h2>Service Login</h2>
+
+    <input type="password" id="password" placeholder="Passwort eingeben">
+
+    <label class="show-pass">
       <input type="checkbox" id="togglePassword"> Passwort anzeigen
-    </div>
-    <button id="loginBtn">Login</button>
+    </label>
+
+    <button class="btn primary" id="loginBtn">Login</button>
   </div>
 
   <script>
-    const input = document.getElementById("passwordInput");
-    const btn = document.getElementById("loginBtn");
+    const input = document.getElementById("password");
     const toggle = document.getElementById("togglePassword");
+    const loginBtn = document.getElementById("loginBtn");
 
-    // Passwort sichtbar machen
     toggle.addEventListener("change", () => {
       input.type = toggle.checked ? "text" : "password";
     });
 
-    // Login Button
-    btn.addEventListener("click", () => {
+    loginBtn.addEventListener("click", () => {
       fetch("https://bier-scoreboard-backend.onrender.com/service/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -102,20 +100,16 @@
           window.location.href = "/service"; // Login erfolgreich
         } else {
           alert("Falsches Passwort");
-          input.value = "";
-          input.focus();
         }
       })
-      .catch(err => {
-        console.error(err);
-        alert("Fehler beim Login");
-      });
+      .catch(() => alert("Fehler beim Login"));
     });
 
-    // Enter-Taste löst Login aus
-    input.addEventListener("keyup", (e) => {
-      if (e.key === "Enter") btn.click();
+    // Enter-Taste unterstützt Login
+    input.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") loginBtn.click();
     });
   </script>
+
 </body>
 </html>
