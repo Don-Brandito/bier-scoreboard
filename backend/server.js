@@ -55,8 +55,8 @@ app.get("/service", (req, res) => {
 });
 
 // Login prüfen
-app.post("/service/login", (req, res) => {
-  console.log("ENV SERVICE_PASS:", process.env.SERVICE_PASS); // nur hier funktioniert es
+// Login prüfen (für index.html)
+app.post("/service", (req, res) => {
   const { password } = req.body;
   if (password === process.env.SERVICE_PASS) {
     req.session.loggedIn = true;
@@ -65,6 +65,7 @@ app.post("/service/login", (req, res) => {
     return res.status(401).json({ error: "Falsches Passwort" });
   }
 });
+
 
 // Middleware für Service-Schutz
 function requireLogin(req, res, next) {
@@ -78,7 +79,7 @@ app.get("/service/panel", requireLogin, (req, res) => {
 });
 
 // Statische Dateien für Service-Menü (CSS, JS, Bilder)
-app.use("/service", express.static(path.join(__dirname, "../public/service")));
+app.use("/service/assets", requireLogin, express.static(path.join(__dirname, "../public/service")));
 
 // ===================== MONGODB =====================
 mongoose
