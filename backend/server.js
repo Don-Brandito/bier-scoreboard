@@ -4,7 +4,6 @@ require("dotenv").config();
 // ===================== MODULE =====================
 const express = require("express");
 const http = require("http");
-const path = require("path");
 const { Server } = require("socket.io");
 const mongoose = require("mongoose");
 
@@ -30,20 +29,6 @@ app.use(cors({
   origin: "https://bier-scoreboard.vercel.app",
   methods: ["GET", "POST"]
 }));
-
-// Statische Dateien serven
-app.use(express.static(path.join(__dirname, "../public")));
-
-// Frontend
-app.get("/", (_, res) =>
-  res.sendFile(path.join(__dirname, "../public/index.html"))
-);
-
-// Service-Panel
-app.get("/service", (_, res) =>
-  res.sendFile(path.join(__dirname, "../public/service/index.html"))
-);
-
 
 
 // ===================== MONGODB =====================
