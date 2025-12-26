@@ -1,3 +1,7 @@
+console.log("SERVICE_PASS:", process.env.SERVICE_PASS);
+console.log("SERVICE_SECRET:", process.env.SERVICE_SECRET);
+
+
 // ===================== ENV =====================
 require("dotenv").config();
 const path = require("path");
