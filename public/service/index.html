@@ -79,6 +79,29 @@
     .login-box button.primary:hover {
       background: #ff0000;
     }
+
+    .password-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;   /* ← DAS ist der Schlüssel */
+    }
+
+    .password-wrapper input {
+    width: 100%;
+    padding-right: 42px;
+    }
+
+    #togglePasswordIcon {
+    position: absolute;
+    right: 10px;
+    cursor: pointer;
+    font-size: 1.2rem;
+    color: #aaa;
+    display: flex;
+    align-items: center;
+    height: 100%;          /* ← volle Höhe der Input-Zeile */
+    }
+
   </style>
 </head>
 <body>
@@ -86,21 +109,9 @@
     <img src="./images/logo-colour.png" alt="Logo">
     <h2>Service Login</h2>
 
-<div style="position: relative; width: 100%;">
-  <input type="password" id="password" placeholder="Passwort eingeben"
-         style="width: 100%; padding-right: 36px; border-radius: 8px; border: 1px solid #777; background: #111; color: #fff; font-size:1rem; box-sizing: border-box;">
-  
-  <span id="togglePasswordIcon" style="
-        position: absolute;
-        right: 10px;
-        top: 50%;
-        transform: translateY(-50%);
-        cursor: pointer;
-        font-size: 1.2rem;
-        color: #aaa;
-      ">
-    🔒
-  </span>
+<div class="password-wrapper">
+  <input type="password" id="password" placeholder="Passwort eingeben">
+  <span id="togglePasswordIcon">🔒</span>
 </div>
 
 
@@ -108,6 +119,9 @@
   </div>
 
   <script>
+   
+    const API_BASE = "https://bier-scoreboard-backend.onrender.com";
+
     const input = document.getElementById("password");
     const toggle = document.getElementById("togglePassword");
     const loginBtn = document.getElementById("loginBtn");
