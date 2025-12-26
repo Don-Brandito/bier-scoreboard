@@ -1,9 +1,5 @@
-console.log("SERVICE_PASS:", process.env.SERVICE_PASS);
-console.log("SERVICE_SECRET:", process.env.SERVICE_SECRET);
-
-
 // ===================== ENV =====================
-require("dotenv").config();
+require("dotenv").config(); // ganz oben
 const path = require("path");
 
 // ===================== MODULE =====================
@@ -20,10 +16,7 @@ const server = http.createServer(app);
 
 // ===================== SOCKET.IO =====================
 const io = new Server(server, {
-  cors: {
-    origin: "https://bier-scoreboard.vercel.app",
-    methods: ["GET", "POST"]
-  }
+  cors: { origin: "https://bier-scoreboard.vercel.app", methods: ["GET","POST"] }
 });
 
 // ===================== SESSION =====================
@@ -32,37 +25,30 @@ app.use(session({
   secret: process.env.SERVICE_SECRET,
   resave: false,
   saveUninitialized: false,
-  cookie: {
-    httpOnly: true,
-    sameSite: "lax",
-    secure: true,
-    maxAge: 1000 * 60 * 60 * 8 // 8 Stunden
-  }
+  cookie: { httpOnly: true, sameSite: "lax", secure: true, maxAge: 1000*60*60*8 }
 }));
 
 // ===================== MIDDLEWARE =====================
 app.use(express.json());
-
-// CORS für API
-app.use(cors({
-  origin: "https://bier-scoreboard.vercel.app",
-  methods: ["GET", "POST"]
-}));
+app.use(cors({ origin: "https://bier-scoreboard.vercel.app", methods: ["GET","POST"] }));
 
 // ===================== LOGIN =====================
 
-// Login-Seite
+// GET /service: Login oder Panel
 app.get("/service", (req, res) => {
-  if (req.session.loggedIn) return res.redirect("/service/panel");
-  res.sendFile(path.join(__dirname, "service/index.html")); // index.html = Login
+  if (req.session.loggedIn) {
+    res.sendFile(path.join(__dirname, "service/panel.html"));
+  } else {
+    res.sendFile(path.join(__dirname, "service/index.html"));
+  }
 });
 
-// Login prüfen
+// POST /service/login: Passwort prüfen
 app.post("/service/login", (req, res) => {
   const { password } = req.body;
 
-  console.log("Eingegebenes Passwort:", password);          // vom Client
-  console.log("Expected Passwort:", process.env.SERVICE_PASS); // von ENV
+  console.log("Eingegebenes Passwort:", password);
+  console.log("Erwartetes Passwort:", process.env.SERVICE_PASS);
 
   if (password === process.env.SERVICE_PASS) {
     req.session.loggedIn = true;
@@ -72,23 +58,22 @@ app.post("/service/login", (req, res) => {
   }
 });
 
-// Middleware für Service-Schutz
+// Middleware zum Schutz
 function requireLogin(req, res, next) {
   if (req.session.loggedIn) return next();
-  res.redirect("/service"); // zurück zur Login-Seite
+  res.redirect("/service");
 }
 
-// Service-Menü nur für eingeloggte User
+// Panel geschützt
 app.get("/service/panel", requireLogin, (req, res) => {
   res.sendFile(path.join(__dirname, "service/panel.html"));
 });
 
-// Statische Assets für Service-Menü, nur nach Login
-app.use("/service/assets", express.static(path.join(__dirname, "../public/service")));
+// Assets geschützt
+app.use("/service/assets", requireLogin, express.static(path.join(__dirname, "service")));
 
 // ===================== MONGODB =====================
-mongoose
-  .connect(process.env.MONGO_URI)
+mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log("✅ MongoDB verbunden"))
   .catch(err => console.error("❌ MongoDB Fehler", err));
 
@@ -109,7 +94,6 @@ const TeamSchema = new mongoose.Schema({
     SektFlasche: { type: Number, default: 0 }
   }
 });
-
 const Team = mongoose.model("Team", TeamSchema);
 
 // ===================== DRINK MAP =====================
@@ -157,9 +141,7 @@ io.on("connection", async socket => {
   const teams = await Team.find().sort({ points: -1 });
   socket.emit("updateScores", teams);
 
-  socket.onAny((event, data) => {
-    console.log("📡 SOCKET EVENT:", event, JSON.stringify(data));
-  });
+  socket.onAny((event, data) => console.log("📡 SOCKET EVENT:", event, data));
 
   socket.on("serviceOrder", async payload => {
     const { team, total, items } = payload;
@@ -185,34 +167,6 @@ io.on("connection", async socket => {
     const teams = await Team.find().sort({ points: -1 });
     io.emit("updateScores", teams);
   });
-});
-
-// ===================== TEAM DELETE =====================
-app.post("/api/deleteTeam", async (req, res) => {
-  const { name, password } = req.body;
-  if (password !== process.env.ADMIN_PASS) return res.status(403).json({ error: "Falsches Passwort" });
-  if (!name) return res.status(400).json({ error: "Kein Team angegeben" });
-
-  await Team.deleteOne({ name });
-  const teams = await Team.find().sort({ points: -1 });
-  io.emit("updateScores", teams);
-  res.json({ ok: true });
-});
-
-// ===================== TEAM RENAME =====================
-app.post("/api/renameTeam", async (req, res) => {
-  const { oldName, newName } = req.body;
-  if (!oldName || !newName) return res.status(400).json({ error: "Ungültige Daten" });
-
-  const exists = await Team.findOne({ name: newName });
-  if (exists) return res.status(409).json({ error: "Team existiert bereits" });
-
-  const result = await Team.updateOne({ name: oldName }, { $set: { name: newName } });
-  if (result.matchedCount === 0) return res.status(404).json({ error: "Team nicht gefunden" });
-
-  const teams = await Team.find().sort({ points: -1 });
-  io.emit("updateScores", teams);
-  res.json({ ok: true });
 });
 
 // ===================== SERVER START =====================
