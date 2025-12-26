@@ -2,50 +2,32 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Service Login</title>
-<link rel="stylesheet" href="./service/style.css">
-<style>
-  body { display: flex; justify-content: center; align-items: center; height: 100vh; background: #f4f4f4; font-family: sans-serif; }
-  .login-box { background: #fff; padding: 2rem; border-radius: 1rem; box-shadow: 0 4px 10px rgba(0,0,0,0.1); text-align: center; width: 300px; }
-  .login-box img { width: 100px; margin-bottom: 1rem; }
-  .login-box input { width: 100%; padding: 0.5rem; margin-bottom: 1rem; border-radius: 0.3rem; border: 1px solid #ccc; }
-  .login-box button { padding: 0.5rem 1rem; border: none; border-radius: 0.3rem; background: #0070f3; color: white; cursor: pointer; }
-  .login-box button:hover { background: #0059c1; }
-</style>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-<div class="login-box">
-  <img src="../images/logo-bg.png" alt="Logo">
-  <h2>Service Login</h2>
-  <input type="password" id="servicePassword" placeholder="Passwort eingeben">
-  <button onclick="login()">Einloggen</button>
-  <p id="errorMsg" style="color:red; display:none;"></p>
+<div class="login-container">
+  <img src="logo.png" alt="Logo">
+  <h1>Service Login</h1>
+  <input type="password" id="password" placeholder="Passwort">
+  <button id="loginBtn">Login</button>
+  <p id="error" style="color:red"></p>
 </div>
 
 <script>
-async function login() {
-  const password = document.getElementById("servicePassword").value.trim();
-  const errorMsg = document.getElementById("errorMsg");
-  errorMsg.style.display = "none";
-
-  if (!password) return;
-
-  const res = await fetch("/api/service/login", {
+document.getElementById("loginBtn").addEventListener("click", async () => {
+  const pw = document.getElementById("password").value;
+  const res = await fetch("/service/login", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ password })
+    body: JSON.stringify({ password: pw })
   });
-
   if (res.ok) {
-    window.location.href = "/service"; // erfolgreich → Service-Menü
+    window.location.href = "/service";
   } else {
-    errorMsg.textContent = "❌ Falsches Passwort";
-    errorMsg.style.display = "block";
+    document.getElementById("error").textContent = "Falsches Passwort";
   }
-}
+});
 </script>
-
 </body>
 </html>
