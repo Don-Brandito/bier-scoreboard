@@ -4,153 +4,128 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Service Login</title>
-  <link rel="stylesheet" href="service/assets/service.css">
+  <link rel="stylesheet" href="service.css">
   <style>
-    /* Container zentrieren wie im Panel */
     body {
-      margin: 0;
-      padding: 0;
-      height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
+      height: 100vh;
       background: #111;
-      font-family: Arial, sans-serif;
+      font-family: sans-serif;
     }
 
     .login-box {
-      background: rgba(0,0,0,0.55);
-      border-radius: 16px;
-      padding: 30px 40px;
-      box-shadow: 0 0 20px rgba(255,0,0,0.3);
+      background: #222;
       border: 2px solid #aa0000;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+      border-radius: 14px;
+      padding: 30px 40px;
+      text-align: center;
       width: 320px;
+      box-shadow: 0 0 20px rgba(255,0,0,0.3);
     }
 
     .login-box img {
-      height: 60px;
+      width: 120px;
       margin-bottom: 20px;
     }
 
     .login-box h2 {
       color: #fff;
       margin-bottom: 20px;
+      font-weight: 700;
     }
 
-    .password-wrapper {
-      position: relative;
-      width: 100%;
-      margin-bottom: 20px;
-    }
-
-    .password-wrapper input {
+    .login-box input {
       width: 100%;
       padding: 10px 12px;
-      border-radius: 10px;
+      margin-bottom: 15px;
+      border-radius: 8px;
       border: 1px solid #777;
-      background: #222;
+      background: #111;
       color: #fff;
       font-size: 1rem;
       box-sizing: border-box;
-      font-family: inherit;
     }
 
-    .password-wrapper button {
-      position: absolute;
-      right: 10px;
-      top: 50%;
-      transform: translateY(-50%);
-      background: none;
-      border: none;
-      color: #aaa;
-      font-size: 1.2rem;
-      cursor: pointer;
-    }
-
-    .login-box .btn {
-      width: 100%;
-      padding: 12px 0;
-      background: #aa0000;
-      border: none;
-      border-radius: 10px;
-      color: #fff;
-      font-weight: 700;
-      cursor: pointer;
-      font-size: 1rem;
-    }
-
-    .login-box .btn:hover {
-      background: #cc0000;
-    }
-
-    .input-hint {
+    .show-pass {
+      display: flex;
+      align-items: center;
+      gap: 6px;
       font-size: 0.8rem;
-      color: #bbb;
-      margin-top: -12px;
-      margin-bottom: 12px;
-      text-align: center;
-      opacity: 0.8;
+      color: #aaa;
+      margin-bottom: 15px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .show-pass input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+    }
+
+    .login-box button.primary {
+      width: 100%;
+      padding: 10px;
+      border-radius: 8px;
+      border: none;
+      background: #aa0000;
+      color: #fff;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .login-box button.primary:hover {
+      background: #ff0000;
     }
   </style>
 </head>
 <body>
-
   <div class="login-box">
-    <img src="images/logo-colour.png" alt="Logo">
+    <img src="assets/logo-colour.png" alt="Logo">
     <h2>Service Login</h2>
 
-    <div class="password-wrapper">
-      <input id="passwordInput" type="password" placeholder="Passwort">
-      <button type="button" id="togglePassword">👁️</button>
-    </div>
+    <input type="password" id="password" placeholder="Passwort eingeben">
 
-        <button class="btn" id="loginBtn">Login</button>
+    <label class="show-pass">
+      <input type="checkbox" id="togglePassword"> Passwort anzeigen
+    </label>
+
+    <button class="primary" id="loginBtn">Login</button>
   </div>
 
   <script>
-    const passwordInput = document.getElementById("passwordInput");
-    const toggleBtn = document.getElementById("togglePassword");
+    const input = document.getElementById("password");
+    const toggle = document.getElementById("togglePassword");
     const loginBtn = document.getElementById("loginBtn");
 
-    // Passwort sichtbar machen / maskieren
-    toggleBtn.addEventListener("click", () => {
-      if (passwordInput.type === "password") {
-        passwordInput.type = "text";
-      } else {
-        passwordInput.type = "password";
-      }
+    // Passwort anzeigen / ausblenden
+    toggle.addEventListener("change", () => {
+      input.type = toggle.checked ? "text" : "password";
     });
 
-    // Login senden
+    // Login
     loginBtn.addEventListener("click", () => {
-      const password = passwordInput.value;
-
-fetch("https://bier-scoreboard-backend.onrender.com/service/login", {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({ password: input.value })
-})
-.then(res => {
-  if (res.ok) window.location.href = "/service/panel";
-  else alert("Falsches Passwort");
-});
+      fetch("https://bier-scoreboard-backend.onrender.com/service/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ password: input.value })
+      })
+      .then(res => {
+        if (res.ok) {
+          window.location.href = "/service"; // Weiter zum Panel
+        } else {
+          alert("Falsches Passwort");
+        }
+      })
+      .catch(() => alert("Fehler beim Login"));
     });
 
     // Enter-Taste unterstützt Login
-    passwordInput.addEventListener("keyup", (e) => {
+    input.addEventListener("keydown", (e) => {
       if (e.key === "Enter") loginBtn.click();
     });
-
-app.get("/service", (req, res) => {
-  if (req.session.loggedIn) return res.redirect("/service/panel");
-  res.redirect("/service/login");
-});
-
-
   </script>
-
 </body>
 </html>
