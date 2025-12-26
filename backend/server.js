@@ -58,6 +58,11 @@ app.post("/service/login", (req, res) => {
   }
 });
 
+// ===================== LOGOUT =====================
+app.post("/service/logout", (req, res) => {
+  req.session.destroy(() => res.json({ ok: true }));
+});
+
 // Middleware zum Schutz
 function requireLogin(req, res, next) {
   if (req.session.loggedIn) return next();
