@@ -23,17 +23,22 @@ const socket = window.socket;
 // ==========================
 // TEAMS-Update vom Backend
 // ==========================
-socket.on("updateScores", teamsFromDB => {
-  // Teams aus DB → Scoreboard-Format
-  window.TEAMS = teamsFromDB.map(t => ({
-    name: t.name,
-    punkte: t.points,
-    drinks: t.drinks || {}
-  }));
+if (socket) {
+  socket.on("updateScores", teamsFromDB => {
+    // Teams aus DB → Scoreboard-Format
+    window.TEAMS = teamsFromDB.map(t => ({
+      name: t.name,
+      punkte: t.points,
+      drinks: t.drinks || {}
+    }));
 
-  // Scoreboard rendern
-  renderStatic();
-});
+    // Scoreboard rendern
+    renderStatic();
+  });
+} else {
+  console.warn("⚠️ Kein Socket vorhanden – Scoreboard wartet auf Verbindung");
+}
+
 
 const ICON_MAP = {
   Bier: "Bier.svg",
