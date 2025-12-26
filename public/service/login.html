@@ -1,33 +1,121 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<meta charset="UTF-8">
-<title>Service Login</title>
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Service Login</title>
+  <link rel="stylesheet" href="login.css">
+  <style>
+    /* Basis Styles */
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #121212; /* dunkles Theme, passend zu Scoreboard */
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .login-container {
+      background-color: #1e1e1e;
+      padding: 40px 30px;
+      border-radius: 15px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+      text-align: center;
+      width: 300px;
+    }
+
+    .login-container img.logo {
+      width: 150px;
+      margin-bottom: 30px;
+    }
+
+    .login-container input[type="password"],
+    .login-container input[type="text"] {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border-radius: 8px;
+      border: none;
+      outline: none;
+      font-size: 16px;
+      background-color: #2a2a2a;
+      color: #fff;
+    }
+
+    .login-container button {
+      width: 100%;
+      padding: 12px;
+      margin-top: 15px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      background-color: #e63946; /* Beispiel Farbe wie bisherige Buttons */
+      color: #fff;
+      transition: background-color 0.3s;
+    }
+
+    .login-container button:hover {
+      background-color: #d62828;
+    }
+
+    .show-password {
+      margin-top: 5px;
+      font-size: 14px;
+      cursor: pointer;
+      color: #f1faee;
+    }
+  </style>
 </head>
 <body>
-<div class="login-container">
-  <img src="logo.png" alt="Logo">
-  <h1>Service Login</h1>
-  <input type="password" id="password" placeholder="Passwort">
-  <button id="loginBtn">Login</button>
-  <p id="error" style="color:red"></p>
-</div>
+  <div class="login-container">
+    <img src="/images/logo-colour.png" alt="Logo" class="logo">
+    <input type="password" id="passwordInput" placeholder="Passwort">
+    <div class="show-password">
+      <input type="checkbox" id="togglePassword"> Passwort anzeigen
+    </div>
+    <button id="loginBtn">Login</button>
+  </div>
 
-<script>
-document.getElementById("loginBtn").addEventListener("click", async () => {
-  const pw = document.getElementById("password").value;
-  const res = await fetch("/service/login", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ password: pw })
-  });
-  if (res.ok) {
-    window.location.href = "/service";
-  } else {
-    document.getElementById("error").textContent = "Falsches Passwort";
-  }
-});
-</script>
+  <script>
+    const input = document.getElementById("passwordInput");
+    const btn = document.getElementById("loginBtn");
+    const toggle = document.getElementById("togglePassword");
+
+    // Passwort sichtbar machen
+    toggle.addEventListener("change", () => {
+      input.type = toggle.checked ? "text" : "password";
+    });
+
+    // Login Button
+    btn.addEventListener("click", () => {
+      fetch("/service/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ password: input.value })
+      })
+      .then(res => {
+        if (res.ok) {
+          window.location.href = "/service"; // Login erfolgreich
+        } else {
+          alert("Falsches Passwort");
+          input.value = "";
+          input.focus();
+        }
+      })
+      .catch(err => {
+        console.error(err);
+        alert("Fehler beim Login");
+      });
+    });
+
+    // Enter-Taste löst Login aus
+    input.addEventListener("keyup", (e) => {
+      if (e.key === "Enter") btn.click();
+    });
+  </script>
 </body>
 </html>
