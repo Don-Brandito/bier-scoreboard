@@ -224,6 +224,14 @@ confirmEventReset.addEventListener("click", async () => {
   }
 });
 
+// -----------------------------------------------------
+// Logout
+// -----------------------------------------------------
+const logoutBtn = document.getElementById("logoutBtn");
+logoutBtn?.addEventListener("click", () => {
+  fetch(`${API_BASE}/service/logout`, { method: "POST" })
+    .finally(() => window.location.href = "/service");
+});
 
 // -----------------------------------------------------
 // Team bearbeiten Popup (Vereinfachte Variante)
@@ -342,6 +350,32 @@ deleteTeamBtn.addEventListener("click", async () => {
     showOrderConfirm({ title: "Fehler", text: "❌ Fehler beim Löschen", danger: true });
   }
 });
+
+
+const teamList = document.getElementById("teamList");
+
+async function loadTeams() {
+  try {
+    const res = await fetch(`${API_BASE}/api/teams`);
+    const teams = await res.json();
+    teamList.innerHTML = "";
+    teams.forEach(team => {
+      const li = document.createElement("li");
+      li.textContent = `${team.name} – ${team.points} Punkte`;
+      li.addEventListener("click", () => {
+        selectedTeam = team.name;
+        document.querySelectorAll("#teamList li").forEach(x => x.classList.remove("active"));
+        li.classList.add("active");
+      });
+      teamList.appendChild(li);
+    });
+  } catch (err) {
+    console.error("Teams laden fehlgeschlagen", err);
+  }
+}
+
+// direkt nach Definition aufrufen
+loadTeams();
 
 
 
