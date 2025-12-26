@@ -1,92 +1,133 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Service Login</title>
-<link rel="stylesheet" href="service.css">
-<style>
-  /* Login-spezifisch */
-  .login-container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    gap: 20px;
-    position: relative;
-    z-index: 10;
-  }
-  .login-container img {
-    width: 180px;
-    height: auto;
-  }
-  .password-row {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    position: relative;
-  }
-  .password-row input[type="password"] {
-    padding: 10px;
-    border-radius: 8px;
-    border: 1px solid #777;
-    font-size: 1rem;
-  }
-  .password-row label {
-    color: #fff;
-    cursor: pointer;
-    user-select: none;
-  }
-  .show-password {
-    margin-left: 5px;
-  }
-  .primary {
-    width: 200px;
-    height: 48px;
-    font-size: 0.8rem;
-    font-weight: 700;
-    border-radius: 10px;
-    text-align: center;
-  }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Service Login</title>
+  <link rel="stylesheet" href="/service/assets/service.css">
+  <style>
+    /* Speziell für Login zentriert */
+    body, html {
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #111; /* wie Panel */
+    }
+
+    #loginBox {
+      background: rgba(0,0,0,0.55);
+      border: 2px solid #aa0000;
+      border-radius: 16px;
+      padding: 30px 25px;
+      text-align: center;
+      box-shadow: 0 0 18px rgba(255,255,255,0.2);
+      max-width: 300px;
+      width: 90%;
+    }
+
+    #loginBox img {
+      width: 120px;
+      margin-bottom: 20px;
+    }
+
+    #loginBox h2 {
+      margin-bottom: 20px;
+      color: #fff;
+      font-weight: 700;
+      font-size: 1.2rem;
+    }
+
+    #loginBox input[type="password"] {
+      width: calc(100% - 40px);
+      padding: 10px 12px;
+      font-size: 1rem;
+      border-radius: 10px;
+      border: 1px solid #777;
+      margin-bottom: 15px;
+      background: #222;
+      color: #fff;
+    }
+
+    #loginBox .show-password {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 8px;
+      margin-bottom: 20px;
+      font-size: 0.9rem;
+      color: #fff;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    #loginBox button {
+      width: 100%;
+      height: 48px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      border-radius: 10px;
+      background: #aa0000;
+      border: none;
+      color: #fff;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    #loginBox button:hover {
+      background: #cc0000;
+    }
+
+    #loginError {
+      color: #f66;
+      font-size: 0.85rem;
+      margin-top: 10px;
+      display: none;
+    }
+  </style>
 </head>
 <body>
-
-<div id="logo-bg"></div> <!-- optional wie im Service -->
-
-<div class="login-container">
-  <img src="../images/logo-colour.png" alt="Logo">
-  
-  <div class="password-row">
+  <div id="loginBox">
+    <img src="/service/assets/images/logo-colour.png" alt="Logo">
+    <h2>Service Login</h2>
     <input type="password" id="password" placeholder="Passwort">
-    <label><input type="checkbox" id="togglePass" class="show-password"> anzeigen</label>
+    <label class="show-password">
+      <input type="checkbox" id="togglePassword"> Passwort anzeigen
+    </label>
+    <button id="loginBtn">Einloggen</button>
+    <div id="loginError">Falsches Passwort</div>
   </div>
 
-  <button id="loginBtn" class="primary">Login</button>
-</div>
+  <script>
+    const passwordInput = document.getElementById("password");
+    const togglePassword = document.getElementById("togglePassword");
+    const loginBtn = document.getElementById("loginBtn");
+    const loginError = document.getElementById("loginError");
 
-<script>
-const togglePass = document.getElementById("togglePass");
-const passwordInput = document.getElementById("password");
+    togglePassword.addEventListener("change", () => {
+      passwordInput.type = togglePassword.checked ? "text" : "password";
+    });
 
-togglePass.addEventListener("change", () => {
-  passwordInput.type = togglePass.checked ? "text" : "password";
-});
+    loginBtn.addEventListener("click", async () => {
+      loginError.style.display = "none";
 
-document.getElementById("loginBtn").addEventListener("click", async () => {
-  const res = await fetch("/service", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ password: passwordInput.value })
-  });
-  if (res.ok) {
-    window.location.href = "/service/panel";
-  } else {
-    alert("Falsches Passwort");
-  }
-});
-</script>
+      const res = await fetch("/service/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ password: passwordInput.value })
+      });
 
+      if (res.ok) {
+        window.location.href = "/service/panel";
+      } else {
+        loginError.style.display = "block";
+      }
+    });
+
+    // Enter-Taste
+    passwordInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") loginBtn.click();
+    });
+  </script>
 </body>
 </html>
