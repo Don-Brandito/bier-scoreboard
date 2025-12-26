@@ -56,6 +56,7 @@ app.get("/service", (req, res) => {
 
 // Login prüfen
 app.post("/service/login", (req, res) => {
+  console.log("ENV SERVICE_PASS:", process.env.SERVICE_PASS); // nur hier funktioniert es
   const { password } = req.body;
   if (password === process.env.SERVICE_PASS) {
     req.session.loggedIn = true;
