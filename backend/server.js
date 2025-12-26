@@ -4,21 +4,15 @@ require("dotenv").config();
 // ===================== MODULE =====================
 const express = require("express");
 const http = require("http");
+const path = require("path");
 const { Server } = require("socket.io");
 const mongoose = require("mongoose");
 const session = require("express-session");
+const cors = require("cors");
 
 // ===================== APP =====================
 const app = express();
 const server = http.createServer(app);
-
-// Socket.IO mit CORS für Vercel-Frontend
-const io = new Server(server, {
-  cors: {
-    origin: "https://bier-scoreboard.vercel.app", // deine Frontend-URL
-    methods: ["GET", "POST"]
-  }
-});
 
 // ===================== SESSION =====================
 app.use(session({
@@ -29,13 +23,23 @@ app.use(session({
   cookie: {
     httpOnly: true,
     sameSite: "lax",
-    secure: true,        // HTTPS notwendig (Vercel/Render)
-    maxAge: 1000 * 60 * 60  * 8// optional: 8 Stunden, kannst anpassen
+    secure: true,        // HTTPS notwendig (Render/Vercel)
+    maxAge: 1000 * 60 * 60 * 8 // 8 Stunden
   }
 }));
 
-// --------------------- LOGIN ------------------------
-// Login Seite
+// ===================== MIDDLEWARE =====================
+// JSON Body Parsing
+app.use(express.json());
+
+// CORS für Express-API
+app.use(cors({
+  origin: "https://bier-scoreboard.vercel.app",
+  methods: ["GET", "POST"]
+}));
+
+// ===================== LOGIN =====================
+// Login-Seite
 app.get("/service/login", (req, res) => {
   res.sendFile(path.join(__dirname, "../public/service/login.html"));
 });
@@ -57,25 +61,13 @@ function requireLogin(req, res, next) {
   res.redirect("/service/login");
 }
 
-// Service-Menü nur mit Login
+// Service-Menü geschützt
 app.get("/service", requireLogin, (req, res) => {
   res.sendFile(path.join(__dirname, "../public/service/index.html"));
 });
 
-app.use("/service", express.static(path.join(__dirname, "../public/service")));
-
-
-// ===================== MIDDLEWARE =====================
-// JSON Body Parsing
-app.use(express.json());
-
-// CORS für Express-API
-const cors = require("cors");
-app.use(cors({
-  origin: "https://bier-scoreboard.vercel.app",
-  methods: ["GET", "POST"]
-}));
-
+// Assets nur nach Login
+app.use("/service/assets", requireLogin, express.static(path.join(__dirname, "../public/service")));
 
 // ===================== MONGODB =====================
 mongoose
@@ -134,7 +126,6 @@ app.post("/api/addTeam", async (req, res) => {
   res.json({ ok: true });
 });
 
-// ===================== RESET =====================
 app.post("/api/admin/reset", async (req, res) => {
   const { password } = req.body;
 
@@ -142,18 +133,24 @@ app.post("/api/admin/reset", async (req, res) => {
     return res.status(401).json({ error: "Falsches Passwort" });
   }
 
-  await Team.deleteMany({}); // 💣 ALLES löschen
-
+  await Team.deleteMany({});
   io.emit("updateScores", []);
 
   res.json({ ok: true });
 });
 
-// ===================== SOCKET =====================
+// ===================== SOCKET.IO =====================
+const io = new Server(server, {
+  cors: {
+    origin: "https://bier-scoreboard.vercel.app",
+    methods: ["GET", "POST"]
+  }
+});
+
 io.on("connection", async socket => {
   console.log("🔌 SOCKET CONNECTED", socket.id);
 
-  // ✅ SOFORT aktuelle Teams senden
+  // Sofort aktuelle Teams senden
   const teams = await Team.find().sort({ points: -1 });
   socket.emit("updateScores", teams);
 
@@ -161,10 +158,8 @@ io.on("connection", async socket => {
     console.log("📡 SOCKET EVENT:", event, JSON.stringify(data));
   });
 
-  // ✅ BESTELLUNG
+  // BESTELLUNG
   socket.on("serviceOrder", async payload => {
-    console.log("🛒 SERVICE ORDER", payload);
-
     const { team, total, items } = payload;
     const inc = { points: total };
 
@@ -176,17 +171,12 @@ io.on("connection", async socket => {
     await Team.updateOne({ name: team }, { $inc: inc });
 
     const teams = await Team.find().sort({ points: -1 });
-
     io.emit("updateScores", teams);
-
-    // 🔥 CENTER SPOT – NUR HIER
     io.emit("centerSpot", { team, total, items });
   });
 
-  // ❌ STORNO (OHNE CENTER SPOT)
+  // STORNO
   socket.on("serviceStorno", async payload => {
-    console.log("↩️ SERVICE STORNO", payload);
-
     const { team, total, items } = payload;
     const inc = { points: total };
 
@@ -201,7 +191,6 @@ io.on("connection", async socket => {
     io.emit("updateScores", teams);
   });
 });
-
 
 // ===================== TEAM LÖSCHEN =====================
 app.post("/api/deleteTeam", async (req, res) => {
@@ -223,42 +212,25 @@ app.post("/api/deleteTeam", async (req, res) => {
   res.json({ ok: true });
 });
 
-
 // ===================== TEAM UMBENENNEN =====================
 app.post("/api/renameTeam", async (req, res) => {
   const { oldName, newName } = req.body;
 
-  if (!oldName || !newName) {
-    return res.status(400).json({ error: "Ungültige Daten" });
-  }
+  if (!oldName || !newName) return res.status(400).json({ error: "Ungültige Daten" });
 
-  // Prüfen ob neuer Name schon existiert
   const exists = await Team.findOne({ name: newName });
-  if (exists) {
-    return res.status(409).json({ error: "Team existiert bereits" });
-  }
+  if (exists) return res.status(409).json({ error: "Team existiert bereits" });
 
-  // Umbenennen
-  const result = await Team.updateOne(
-    { name: oldName },
-    { $set: { name: newName } }
-  );
+  const result = await Team.updateOne({ name: oldName }, { $set: { name: newName } });
+  if (result.matchedCount === 0) return res.status(404).json({ error: "Team nicht gefunden" });
 
-  // Falls kein Team gefunden wurde
-  if (result.matchedCount === 0) {
-    return res.status(404).json({ error: "Team nicht gefunden" });
-  }
-
-  // Neue Teamliste senden
   const teams = await Team.find().sort({ points: -1 });
   io.emit("updateScores", teams);
 
   res.json({ ok: true });
 });
 
-
-
-// ===================== START =====================
+// ===================== START SERVER =====================
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
   console.log("🚀 Server läuft auf http://localhost:" + PORT);
