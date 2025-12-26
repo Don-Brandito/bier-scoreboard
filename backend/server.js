@@ -46,10 +46,7 @@ app.get("/service", (req, res) => {
 // POST /service/login: Passwort prüfen
 app.post("/service/login", (req, res) => {
   const { password } = req.body;
-
-  console.log("Eingegebenes Passwort:", password);
-  console.log("Erwartetes Passwort:", process.env.SERVICE_PASS);
-
+  
   if (password === process.env.SERVICE_PASS) {
     req.session.loggedIn = true;
     return res.json({ ok: true });
