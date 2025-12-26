@@ -30,7 +30,11 @@ app.use(session({
 
 // ===================== MIDDLEWARE =====================
 app.use(express.json());
-app.use(cors({ origin: "https://bier-scoreboard.vercel.app", methods: ["GET","POST"] }));
+app.use(cors({
+  origin: "https://bier-scoreboard.vercel.app",
+  methods: ["GET","POST"],
+  credentials: true // ✅ erlaubt Cookies
+}));
 
 // ===================== LOGIN =====================
 
