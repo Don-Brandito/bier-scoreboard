@@ -6,6 +6,7 @@ const express = require("express");
 const http = require("http");
 const { Server } = require("socket.io");
 const mongoose = require("mongoose");
+const session = require("express-session");
 
 // ===================== APP =====================
 const app = express();
@@ -18,6 +19,37 @@ const io = new Server(server, {
     methods: ["GET", "POST"]
   }
 });
+
+// ===================== SESSION =====================
+app.use(session({
+  name: "service.sid",
+  secret: process.env.SERVICE_SECRET, // in .env festlegen
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    httpOnly: true,
+    sameSite: "lax",
+    secure: true,        // HTTPS notwendig (Vercel/Render)
+    maxAge: 1000 * 60 * 60  * 8// optional: 8 Stunden, kannst anpassen
+  }
+}));
+
+// --------------------- LOGIN ------------------------
+// Login-Seite
+app.get("/service/login", (req, res) => {
+  res.sendFile(path.join(__dirname, "../public/service/login.html"));
+});
+
+// Login POST
+app.post("/service/login", (req, res) => {
+  const { password } = req.body;
+  if (password === process.env.SERVICE_PASS) {
+    req.session.loggedIn = true;
+    return res.json({ ok: true });
+  }
+  res.status(401).json({ error: "Falsches Passwort" });
+});
+
 
 // ===================== MIDDLEWARE =====================
 // JSON Body Parsing
