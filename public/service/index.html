@@ -128,28 +128,28 @@
     loginBtn.addEventListener("click", () => {
       const password = passwordInput.value;
 
-      fetch("https://bier-scoreboard-backend.onrender.com/service", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ password })
-      })
-      .then(res => {
-        if (res.ok) {
-          window.location.href = "/service/panel";
-        } else {
-          alert("Falsches Passwort");
-        }
-      })
-      .catch(err => {
-        console.error(err);
-        alert("Fehler beim Login");
-      });
+fetch("https://bier-scoreboard-backend.onrender.com/service/login", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ password: input.value })
+})
+.then(res => {
+  if (res.ok) window.location.href = "/service/panel";
+  else alert("Falsches Passwort");
+});
     });
 
     // Enter-Taste unterstützt Login
     passwordInput.addEventListener("keyup", (e) => {
       if (e.key === "Enter") loginBtn.click();
     });
+
+app.get("/service", (req, res) => {
+  if (req.session.loggedIn) return res.redirect("/service/panel");
+  res.redirect("/service/login");
+});
+
+
   </script>
 
 </body>
