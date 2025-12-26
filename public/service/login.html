@@ -92,7 +92,7 @@
 
     // Login Button
     btn.addEventListener("click", () => {
-      fetch("/service/login", {
+      fetch("https://bier-scoreboard-backend.onrender.com/service/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ password: input.value })
