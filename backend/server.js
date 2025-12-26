@@ -1,10 +1,10 @@
 // ===================== ENV =====================
 require("dotenv").config();
+const path = require("path");
 
 // ===================== MODULE =====================
 const express = require("express");
 const http = require("http");
-const path = require("path");
 const { Server } = require("socket.io");
 const mongoose = require("mongoose");
 const session = require("express-session");
@@ -13,6 +13,14 @@ const cors = require("cors");
 // ===================== APP =====================
 const app = express();
 const server = http.createServer(app);
+
+// ===================== SOCKET.IO =====================
+const io = new Server(server, {
+  cors: {
+    origin: "https://bier-scoreboard.vercel.app",
+    methods: ["GET", "POST"]
+  }
+});
 
 // ===================== SESSION =====================
 app.use(session({
@@ -23,25 +31,27 @@ app.use(session({
   cookie: {
     httpOnly: true,
     sameSite: "lax",
-    secure: true,        // HTTPS notwendig (Render/Vercel)
+    secure: true,        // HTTPS notwendig
     maxAge: 1000 * 60 * 60 * 8 // 8 Stunden
   }
 }));
 
 // ===================== MIDDLEWARE =====================
-// JSON Body Parsing
 app.use(express.json());
 
-// CORS für Express-API
+// CORS für API
 app.use(cors({
   origin: "https://bier-scoreboard.vercel.app",
   methods: ["GET", "POST"]
 }));
 
 // ===================== LOGIN =====================
-// Login-Seite
-app.get("/service/login", (req, res) => {
-  res.sendFile(path.join(__dirname, "../public/service/login.html"));
+app.get("/service", (req, res) => {
+  if (req.session.loggedIn) {
+    // Schon eingeloggt → direkt zum Service-Menü
+    return res.redirect("/service/panel");
+  }
+  res.sendFile(path.join(__dirname, "../public/service/index.html"));
 });
 
 // Login prüfen
@@ -58,16 +68,16 @@ app.post("/service/login", (req, res) => {
 // Middleware für Service-Schutz
 function requireLogin(req, res, next) {
   if (req.session.loggedIn) return next();
-  res.redirect("/service/login");
+  res.redirect("/service");
 }
 
-// Service-Menü geschützt
-app.get("/service", requireLogin, (req, res) => {
-  res.sendFile(path.join(__dirname, "../public/service/index.html"));
+// Service-Menü nur für eingeloggte User
+app.get("/service/panel", requireLogin, (req, res) => {
+  res.sendFile(path.join(__dirname, "../public/service/panel.html"));
 });
 
-// Assets nur nach Login
-app.use("/service/assets", requireLogin, express.static(path.join(__dirname, "../public/service")));
+// Statische Dateien für Service-Menü (CSS, JS, Bilder)
+app.use("/service", express.static(path.join(__dirname, "../public/service")));
 
 // ===================== MONGODB =====================
 mongoose
@@ -75,6 +85,7 @@ mongoose
   .then(() => console.log("✅ MongoDB verbunden"))
   .catch(err => console.error("❌ MongoDB Fehler", err));
 
+// ===================== TEAM SCHEMA =====================
 const TeamSchema = new mongoose.Schema({
   name: { type: String, unique: true, required: true },
   points: { type: Number, default: 0 },
@@ -126,6 +137,7 @@ app.post("/api/addTeam", async (req, res) => {
   res.json({ ok: true });
 });
 
+// RESET
 app.post("/api/admin/reset", async (req, res) => {
   const { password } = req.body;
 
@@ -139,18 +151,10 @@ app.post("/api/admin/reset", async (req, res) => {
   res.json({ ok: true });
 });
 
-// ===================== SOCKET.IO =====================
-const io = new Server(server, {
-  cors: {
-    origin: "https://bier-scoreboard.vercel.app",
-    methods: ["GET", "POST"]
-  }
-});
-
+// ===================== SOCKET.IO EVENTS =====================
 io.on("connection", async socket => {
   console.log("🔌 SOCKET CONNECTED", socket.id);
 
-  // Sofort aktuelle Teams senden
   const teams = await Team.find().sort({ points: -1 });
   socket.emit("updateScores", teams);
 
@@ -158,11 +162,9 @@ io.on("connection", async socket => {
     console.log("📡 SOCKET EVENT:", event, JSON.stringify(data));
   });
 
-  // BESTELLUNG
   socket.on("serviceOrder", async payload => {
     const { team, total, items } = payload;
     const inc = { points: total };
-
     for (const [label, qty] of Object.entries(items || {})) {
       const field = DRINK_FIELD_MAP[label];
       if (field) inc[`drinks.${field}`] = qty;
@@ -172,14 +174,13 @@ io.on("connection", async socket => {
 
     const teams = await Team.find().sort({ points: -1 });
     io.emit("updateScores", teams);
+
     io.emit("centerSpot", { team, total, items });
   });
 
-  // STORNO
   socket.on("serviceStorno", async payload => {
     const { team, total, items } = payload;
     const inc = { points: total };
-
     for (const [label, qty] of Object.entries(items || {})) {
       const field = DRINK_FIELD_MAP[label];
       if (field) inc[`drinks.${field}`] = qty;
@@ -192,36 +193,33 @@ io.on("connection", async socket => {
   });
 });
 
-// ===================== TEAM LÖSCHEN =====================
+// ===================== TEAM DELETE =====================
 app.post("/api/deleteTeam", async (req, res) => {
   const { name, password } = req.body;
 
-  if (password !== process.env.ADMIN_PASS) {
-    return res.status(403).json({ error: "Falsches Passwort" });
-  }
-
-  if (!name) {
-    return res.status(400).json({ error: "Kein Team angegeben" });
-  }
+  if (password !== process.env.ADMIN_PASS) return res.status(403).json({ error: "Falsches Passwort" });
+  if (!name) return res.status(400).json({ error: "Kein Team angegeben" });
 
   await Team.deleteOne({ name });
-
   const teams = await Team.find().sort({ points: -1 });
   io.emit("updateScores", teams);
 
   res.json({ ok: true });
 });
 
-// ===================== TEAM UMBENENNEN =====================
+// ===================== TEAM RENAME =====================
 app.post("/api/renameTeam", async (req, res) => {
   const { oldName, newName } = req.body;
-
   if (!oldName || !newName) return res.status(400).json({ error: "Ungültige Daten" });
 
   const exists = await Team.findOne({ name: newName });
   if (exists) return res.status(409).json({ error: "Team existiert bereits" });
 
-  const result = await Team.updateOne({ name: oldName }, { $set: { name: newName } });
+  const result = await Team.updateOne(
+    { name: oldName },
+    { $set: { name: newName } }
+  );
+
   if (result.matchedCount === 0) return res.status(404).json({ error: "Team nicht gefunden" });
 
   const teams = await Team.find().sort({ points: -1 });
@@ -230,8 +228,6 @@ app.post("/api/renameTeam", async (req, res) => {
   res.json({ ok: true });
 });
 
-// ===================== START SERVER =====================
+// ===================== SERVER START =====================
 const PORT = process.env.PORT || 3000;
-server.listen(PORT, () => {
-  console.log("🚀 Server läuft auf http://localhost:" + PORT);
-});
+server.listen(PORT, () => console.log(`🚀 Server läuft auf http://localhost:${PORT}`));
