@@ -50,11 +50,11 @@ app.use(cors({
 // Login-Seite
 app.get("/service", (req, res) => {
   if (req.session.loggedIn) return res.redirect("/service/panel");
-  res.sendFile(path.join(__dirname, "../public/service/index.html"));
+  res.sendFile(path.join(__dirname, "service/index.html")); // index.html = Login
 });
 
 // Login prüfen
-app.post("/service", (req, res) => {
+app.post("/service/login", (req, res) => {
   const { password } = req.body;
   if (password === process.env.SERVICE_PASS) {
     req.session.loggedIn = true;
@@ -67,16 +67,16 @@ app.post("/service", (req, res) => {
 // Middleware für Service-Schutz
 function requireLogin(req, res, next) {
   if (req.session.loggedIn) return next();
-  res.redirect("/service");
+  res.redirect("/service"); // zurück zur Login-Seite
 }
 
 // Service-Menü nur für eingeloggte User
 app.get("/service/panel", requireLogin, (req, res) => {
-  res.sendFile(path.join(__dirname, "../public/service/panel.html"));
+  res.sendFile(path.join(__dirname, "service/panel.html"));
 });
 
 // Statische Assets für Service-Menü, nur nach Login
-app.use("/service/assets", requireLogin, express.static(path.join(__dirname, "../public/service")));
+app.use("/service/assets", express.static(path.join(__dirname, "../public/service")));
 
 // ===================== MONGODB =====================
 mongoose
