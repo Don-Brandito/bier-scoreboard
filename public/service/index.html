@@ -144,9 +144,11 @@ loginBtn.addEventListener("click", () => {
     credentials: "include"   // ✅ sehr wichtig
   })
   .then(res => {
-    if (res.ok) {
-      window.location.href = "/service"; // leitet korrekt auf das Panel weiter
-    } else {
+if (res.ok) {
+  localStorage.setItem("serviceLoggedIn", "1");
+  window.location.href = "/service/panel.html";
+}
+ else {
       alert("Falsches Passwort");
     }
   })

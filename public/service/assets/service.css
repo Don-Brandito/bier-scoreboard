@@ -240,7 +240,14 @@ footer {
   border-radius: 10px;
   text-align: center;
 }
-
+.logout {
+  width: 200px;       /* gleiche Breite */
+  height: 48px;       /* gleiche Höhe */
+  font-size: 0.8rem;  /* gleiche Schriftgröße */
+  font-weight: 700;   /* fett */
+  border-radius: 10px; /* gleiche Rundung */
+  text-align: center;
+}
 /* Buttons innerhalb der Kachel komplett entfernen */
 .btn-plus,
 .btn-bottle {

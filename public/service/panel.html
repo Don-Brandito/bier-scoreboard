@@ -5,6 +5,12 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>D'Wädderhäx - Service Scoreboard</title>
   <link rel="stylesheet" href="/service/assets/service.css">
+  <script>
+  if (!localStorage.getItem("serviceLoggedIn")) {
+    window.location.href = "/service/";
+  }
+</script>
+
   <!-- Socket.IO Client von CDN -->
 <script src="https://bier-scoreboard-backend.onrender.com/socket.io/socket.io.js"></script>
 </head>
@@ -31,6 +37,7 @@
       <button id="resetAllBtn" class="btn danger">
   Event-Reset
 </button>
+<button id="logoutBtn" class="btn logout">Logout</button>
 
     </div>
 

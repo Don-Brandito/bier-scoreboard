@@ -1,6 +1,39 @@
 // ===================================================================
 // service.js - Storno (Variante A) + stabile Kachel-UI
 // ===================================================================
+async function authFetch(url, options = {}) {
+  const res = await fetch(url, {
+    ...options,
+    credentials: "include"
+  });
+
+  if (res.status === 401) {
+    localStorage.removeItem("serviceLoggedIn");
+    window.location.href = "/service/";
+    throw new Error("Unauthorized");
+  }
+
+  return res;
+}
+
+const API_BASE = "https://bier-scoreboard-backend.onrender.com";
+
+
+fetch("https://bier-scoreboard-backend.onrender.com/service/check", {
+  credentials: "include"
+})
+.then(res => {
+  if (!res.ok) {
+    localStorage.removeItem("serviceLoggedIn");
+    window.location.href = "/service/";
+  }
+})
+.catch(() => {
+  localStorage.removeItem("serviceLoggedIn");
+  window.location.href = "/service/";
+});
+
+
 
 // Socket global verwenden
 if (typeof io !== "undefined") {
@@ -194,7 +227,7 @@ confirmEventReset.addEventListener("click", async () => {
   }
 
   try {
-   const res = await fetch(`${API_BASE}/api/admin/reset`, {
+   const res = await authFetch(`${API_BASE}/api/admin/reset`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ password })
@@ -225,15 +258,6 @@ confirmEventReset.addEventListener("click", async () => {
 });
 
 // -----------------------------------------------------
-// Logout
-// -----------------------------------------------------
-const logoutBtn = document.getElementById("logoutBtn");
-logoutBtn?.addEventListener("click", () => {
-  fetch(`${API_BASE}/service/logout`, { method: "POST" })
-    .finally(() => window.location.href = "/service");
-});
-
-// -----------------------------------------------------
 // Team bearbeiten Popup (Vereinfachte Variante)
 // -----------------------------------------------------
  // ----------------- Team hinzufügen -----------------
@@ -250,7 +274,7 @@ saveTeam.addEventListener("click", async () => {
   const name = teamNameInput.value.trim();
   if (!name) return;
 
-  await fetch(`${API_BASE}/api/addTeam`, {
+  await authFetch(`${API_BASE}/api/addTeam`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ name })
@@ -283,7 +307,7 @@ renameTeamBtn.addEventListener("click", async () => {
   const newName = editTeamName.value.trim();
   if (!oldName || !newName || oldName === newName) return;
 
-  const res = await fetch(`${API_BASE}/api/renameTeam`, {
+  const res = await authFetch(`${API_BASE}/api/renameTeam`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ oldName, newName })
@@ -317,7 +341,7 @@ deleteTeamBtn.addEventListener("click", async () => {
   }
 
   try {
-    const res = await fetch(`${API_BASE}/api/deleteTeam`, {
+    const res = await authFetch(`${API_BASE}/api/deleteTeam`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name: team, password })
@@ -356,7 +380,7 @@ const teamList = document.getElementById("teamList");
 
 async function loadTeams() {
   try {
-    const res = await fetch(`${API_BASE}/api/teams`);
+    const res = await authFetch(`${API_BASE}/api/teams`);
     const teams = await res.json();
     teamList.innerHTML = "";
     teams.forEach(team => {
@@ -751,8 +775,6 @@ input.addEventListener("input", () => {
     }
 });
 
-const API_BASE = "https://bier-scoreboard-backend.onrender.com";
-
 fetch(`${API_BASE}/api/teams`)
   .then(res => res.json())
   .then(teams => {
@@ -763,3 +785,17 @@ fetch(`${API_BASE}/api/teams`)
 
 
 })
+
+document.getElementById("logoutBtn")?.addEventListener("click", async () => {
+  try {
+    await authFetch("https://bier-scoreboard-backend.onrender.com/service/logout", {
+      method: "POST",
+      credentials: "include"
+    });
+  } catch (e) {
+    // egal – wir loggen lokal aus
+  }
+
+  localStorage.removeItem("serviceLoggedIn");
+  window.location.href = "/service/";
+});
