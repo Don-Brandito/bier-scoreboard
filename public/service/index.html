@@ -86,24 +86,23 @@
   align-items: center;   /* vertikal mittig */
 }
 
-#togglePasswordIcon {
-  position: absolute;
-  right: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 24px;
-  height: 24px;
-  color: white;          /* 🔑 Weiß */
+#togglePasswordIcon img {
+  width: 20px;
+  height: 20px;
+  display: block;                 /* verhindert Baseline-Versatz */
+  filter: brightness(0) invert(1); /* SVG zuverlässig weiß */
 }
+
+
 
 .password-wrapper input {
   width: 100%;
-  padding-right: 42px;   /* Platz für Icon */
+  padding-right: 42px;  /* Platz für Icon */
+  height: 40px;         /* feste Höhe für Input-Zeile */
+  line-height: 40px;    /* gleiche Höhe für vertikale Ausrichtung */
+  box-sizing: border-box;
 }
+
 
 
   </style>
@@ -115,14 +114,14 @@
 
 <div class="password-wrapper">
   <input type="password" id="password" placeholder="Passwort eingeben">
-  <span id="togglePasswordIcon">
-    <!-- Start-SVG Kreis+Halbkreis geschlossen -->
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <circle cx="12" cy="12" r="10"></circle>
-      <path d="M12 2 A10 10 0 0 1 12 22"></path>
-      <line x1="4" y1="4" x2="20" y2="20" stroke="white"></line> <!-- durchgestrichen -->
-    </svg>
-  </span>
+<span id="togglePasswordIcon">
+  <img
+    id="passwordIcon"
+    src="/images/passwort-hide.svg"
+    alt="Passwort anzeigen"
+  >
+</span>
+
 </div>
 
 
@@ -135,29 +134,20 @@
     const API_BASE = "https://bier-scoreboard-backend.onrender.com";
 
     const input = document.getElementById("password");
-    const toggle = document.getElementById("togglePassword");
     const loginBtn = document.getElementById("loginBtn");
     const passwordInput = document.getElementById("password");
     const toggleIcon = document.getElementById("togglePasswordIcon");
 
 toggleIcon.addEventListener("click", () => {
-  const isPassword = passwordInput.type === "password";
-  passwordInput.type = isPassword ? "text" : "password";
+  const isHidden = passwordInput.type === "password";
 
-  // SVG wechseln (Kreis halb + durchgestrichen vs offen)
-  toggleIcon.innerHTML = isPassword
-    ? `
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <circle cx="12" cy="12" r="10"></circle>
-      <path d="M12 2 A10 10 0 0 1 12 22"></path>
-    </svg>`
-    : `
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <circle cx="12" cy="12" r="10"></circle>
-      <path d="M12 2 A10 10 0 0 1 12 22"></path>
-      <line x1="4" y1="4" x2="20" y2="20" stroke="white"></line>
-    </svg>`;
+  passwordInput.type = isHidden ? "text" : "password";
+
+  document.getElementById("passwordIcon").src = isHidden
+    ? "/images/passwort-show.svg"
+    : "/images/passwort-hide.svg";
 });
+
 
 
 
