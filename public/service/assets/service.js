@@ -4,40 +4,39 @@
 async function authFetch(url, options = {}) {
   const res = await fetch(url, {
     ...options,
-    credentials: "include"
+    credentials: "include", // 🔑 Cookie wird mitgeschickt
   });
 
+  // Session abgelaufen oder nicht eingeloggt
   if (res.status === 401) {
-    localStorage.removeItem("serviceLoggedIn");
-    window.location.href = "/service/";
-    throw new Error("Unauthorized");
+    window.location.href = "/service"; // zurück zum Login
+    return res;
   }
 
   return res;
 }
 
+
 const API_BASE = "https://bier-scoreboard-backend.onrender.com";
 
 
-fetch("https://bier-scoreboard-backend.onrender.com/service/check", {
-  credentials: "include"
-})
-.then(res => {
-  if (!res.ok) {
+// Session-Check – leitet automatisch zum Login, wenn abgelaufen
+authFetch(`${API_BASE}/service/check`)
+  .catch(() => {
+    // nur für den Fall, dass ein Netzwerkfehler passiert
     localStorage.removeItem("serviceLoggedIn");
     window.location.href = "/service/";
-  }
-})
-.catch(() => {
-  localStorage.removeItem("serviceLoggedIn");
-  window.location.href = "/service/";
-});
+  });
+
+
 
 
 
 // Socket global verwenden
 if (typeof io !== "undefined") {
-  window.socket = io("https://bier-scoreboard-backend.onrender.com");
+window.socket = io("https://bier-scoreboard-backend.onrender.com", {
+  withCredentials: true
+});
 }
 const socket = window.socket; // lokale Referenz darauf
 
@@ -382,7 +381,7 @@ async function loadTeams() {
   try {
     const res = await authFetch(`${API_BASE}/api/teams`);
 
-    // Falls authFetch aus irgendeinem Grund doch kein Redirect macht
+    // Stop, wenn fetch nicht ok (401 bereits behandelt)
     if (!res.ok) return;
 
     const teams = await res.json();
@@ -405,12 +404,12 @@ async function loadTeams() {
 
       teamList.appendChild(li);
     });
-
   } catch (err) {
-    // KEIN Redirect hier – authFetch kümmert sich darum
     console.error("Teams laden fehlgeschlagen", err);
+    // Optional: kurze Meldung an Nutzer
   }
 }
+
 
 // ⬅️ EINZIGER Aufruf (wichtig!)
 loadTeams();
