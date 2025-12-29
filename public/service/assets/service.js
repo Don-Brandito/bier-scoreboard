@@ -109,6 +109,7 @@ const eventResetPopup = document.getElementById("eventResetPopup");
 const cancelEventReset = document.getElementById("cancelEventReset");
 const confirmEventReset = document.getElementById("confirmEventReset");
 const eventResetPassword = document.getElementById("eventResetPassword");
+const teamList = document.getElementById("teamList");
 
 document.getElementById("cancelTeam").addEventListener("click", () => {
   document.getElementById("teamPopup").classList.add("hidden");
@@ -370,9 +371,6 @@ deleteTeamBtn.addEventListener("click", async () => {
   }
 });
 
-
-
-const teamList = document.getElementById("teamList");
 
 async function loadTeams() {
   try {
