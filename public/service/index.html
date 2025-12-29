@@ -48,22 +48,6 @@
       box-sizing: border-box;
     }
 
-    .show-pass {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 0.8rem;
-      color: #aaa;
-      margin-bottom: 15px;
-      cursor: pointer;
-      user-select: none;
-    }
-
-    .show-pass input[type="checkbox"] {
-      width: 18px;
-      height: 18px;
-    }
-
     .login-box button.primary {
       width: 100%;
       padding: 10px;
@@ -82,27 +66,32 @@
 
 .password-wrapper {
   position: relative;
-  display: flex;
-  align-items: center;   /* vertikal mittig */
+  width: 100%;
+}
+
+#togglePasswordIcon {
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  transform: translateY(-50%);
+  cursor: pointer;
+  height: 20px;
+  width: 20px;
 }
 
 #togglePasswordIcon img {
   width: 20px;
   height: 20px;
-  display: block;                 /* verhindert Baseline-Versatz */
-  filter: brightness(0) invert(1); /* SVG zuverlässig weiß */
+  display: block;
+  filter: brightness(0) invert(1);
 }
-
-
 
 .password-wrapper input {
   width: 100%;
-  padding-right: 42px;  /* Platz für Icon */
-  height: 40px;         /* feste Höhe für Input-Zeile */
-  line-height: 40px;    /* gleiche Höhe für vertikale Ausrichtung */
+  height: 40px;
+  padding: 10px 42px 10px 12px; /* rechts Platz fürs Icon */
   box-sizing: border-box;
 }
-
 
 
   </style>
