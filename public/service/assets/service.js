@@ -302,10 +302,10 @@ editTeamBtn.addEventListener("click", () => {
   teamEditPopup.classList.remove("hidden");
 });
 
+// ----------------- Team umbenennen -----------------
 renameTeamBtn.addEventListener("click", async () => {
   const oldName = teamEditPopup.dataset.team;
   const newName = editTeamName.value.trim();
-
   if (!oldName || !newName || oldName === newName) return;
 
   try {
@@ -314,16 +314,11 @@ renameTeamBtn.addEventListener("click", async () => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ oldName, newName })
     });
+    if (!res.ok) throw new Error("Fehler beim Umbennen");
 
-    if (!res.ok) {
-      showOrderConfirm({ title: "Fehler", text: "Fehler beim Umbennen", danger: true });
-      return;
-    }
-
-    // Update UI
     selectedTeam = newName;
-    loadTeams();
     teamEditPopup.classList.add("hidden");
+    loadTeams();
     showOrderConfirm({ title: "Erfolg", text: `✅ Team "${oldName}" wurde in "${newName}" umbenannt` });
   } catch (err) {
     console.error(err);
@@ -331,19 +326,12 @@ renameTeamBtn.addEventListener("click", async () => {
   }
 });
 
-
-
+// ----------------- Team löschen -----------------
 deleteTeamBtn.addEventListener("click", async () => {
   const team = teamEditPopup.dataset.team;
   const password = deleteTeamPassword.value.trim();
-
-  if (!team) {
-    showOrderConfirm({ title: "Fehler", text: "Bitte zuerst ein Team auswählen.", danger: true });
-    return;
-  }
-
-  if (!password) {
-    showOrderConfirm({ title: "Fehler", text: "Bitte Passwort eingeben", danger: true });
+  if (!team || !password) {
+    showOrderConfirm({ title: "Fehler", text: "Team oder Passwort fehlt", danger: true });
     return;
   }
 
@@ -353,13 +341,8 @@ deleteTeamBtn.addEventListener("click", async () => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name: team, password })
     });
+    if (!res.ok) throw new Error("Fehler beim Löschen");
 
-    if (!res.ok) {
-      showOrderConfirm({ title: "Fehler", text: "❌ Falsches Passwort oder Fehler beim Löschen", danger: true });
-      return;
-    }
-
-    // Erfolgreich gelöscht
     teamEditPopup.classList.add("hidden");
     deleteTeamPassword.value = "";
     selectedTeam = "";
@@ -367,7 +350,7 @@ deleteTeamBtn.addEventListener("click", async () => {
     showOrderConfirm({ title: "Erfolg", text: `✅ Team "${team}" wurde gelöscht` });
   } catch (err) {
     console.error(err);
-    showOrderConfirm({ title: "Fehler", text: "❌ Fehler beim Löschen", danger: true });
+    showOrderConfirm({ title: "Fehler", text: "❌ Falsches Passwort oder Fehler beim Löschen", danger: true });
   }
 });
 
