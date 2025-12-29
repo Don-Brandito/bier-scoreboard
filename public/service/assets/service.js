@@ -301,125 +301,73 @@ editTeamBtn.addEventListener("click", () => {
   teamEditPopup.classList.remove("hidden");
 });
 
-renameTeamBtn.addEventListener("click", () => {
+renameTeamBtn.addEventListener("click", async () => {
   const oldName = teamEditPopup.dataset.team;
   const newName = editTeamName.value.trim();
 
   if (!oldName || !newName || oldName === newName) return;
 
-  // Passwort-Abfrage über Popup
-  showPasswordConfirmPopup({
-    title: "Team umbennenen",
-    text: `Bitte Admin-Passwort eingeben, um "${oldName}" in "${newName}" umzubenennen.`,
-    danger: false,
-    confirmText: "Umbennen",
-    cancelText: "Abbrechen",
-    onConfirm: async (password) => {
-      try {
-        const res = await authFetch(`${API_BASE}/api/renameTeam`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ oldName, newName, password })
-        });
+  try {
+    const res = await authFetch(`${API_BASE}/api/renameTeam`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ oldName, newName })
+    });
 
-        if (!res.ok) {
-          showOrderConfirm({
-            title: "Fehler",
-            text: "❌ Fehler beim Umbennen (falsches Passwort?)",
-            danger: true
-          });
-          return false; // Passwort falsch → Popup bleibt
-        }
-
-        // Erfolgreich umbenannt
-        teamEditPopup.classList.add("hidden");
-        showOrderConfirm({
-          title: "Erfolg",
-          text: `✅ Team "${oldName}" wurde in "${newName}" umbenannt`
-        });
-
-        // Teams neu laden
-        loadTeams();
-
-        return true; // Passwort korrekt → Popup schließt
-      } catch (err) {
-        console.error(err);
-        showOrderConfirm({
-          title: "Fehler",
-          text: "❌ Fehler beim Umbennen",
-          danger: true
-        });
-        return false;
-      }
+    if (!res.ok) {
+      showOrderConfirm({ title: "Fehler", text: "Fehler beim Umbennen", danger: true });
+      return;
     }
-  });
+
+    // Update UI
+    selectedTeam = newName;
+    loadTeams();
+    teamEditPopup.classList.add("hidden");
+    showOrderConfirm({ title: "Erfolg", text: `✅ Team "${oldName}" wurde in "${newName}" umbenannt` });
+  } catch (err) {
+    console.error(err);
+    showOrderConfirm({ title: "Fehler", text: "Fehler beim Umbennen", danger: true });
+  }
 });
 
 
-// ================================
-// Team löschen
-// ================================
-deleteTeamBtn.addEventListener("click", () => {
+
+deleteTeamBtn.addEventListener("click", async () => {
   const team = teamEditPopup.dataset.team;
+  const password = deleteTeamPassword.value.trim();
 
   if (!team) {
-    showOrderConfirm({
-      title: "Fehler",
-      text: "Bitte zuerst ein Team auswählen.",
-      danger: true
-    });
+    showOrderConfirm({ title: "Fehler", text: "Bitte zuerst ein Team auswählen.", danger: true });
     return;
   }
 
-  // Passwort-Abfrage über Popup
-  showPasswordConfirmPopup({
-    title: "Team löschen",
-    text: `Bitte Admin-Passwort eingeben, um das Team "${team}" zu löschen.`,
-    danger: true,
-    confirmText: "Löschen",
-    cancelText: "Abbrechen",
-    onConfirm: async (password) => {
-      if (!password) return false; // Passwort leer → Popup bleibt
+  if (!password) {
+    showOrderConfirm({ title: "Fehler", text: "Bitte Passwort eingeben", danger: true });
+    return;
+  }
 
-      try {
-        const res = await authFetch(`${API_BASE}/api/deleteTeam`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ name: team, password })
-        });
+  try {
+    const res = await authFetch(`${API_BASE}/api/deleteTeam`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name: team, password })
+    });
 
-        if (!res.ok) {
-          showOrderConfirm({
-            title: "Fehler",
-            text: "❌ Falsches Passwort oder Fehler beim Löschen",
-            danger: true
-          });
-          return false; // Passwort falsch → Popup bleibt
-        }
-
-        // Erfolgreich gelöscht
-        teamEditPopup.classList.add("hidden");
-        selectedTeam = "";
-        showOrderConfirm({
-          title: "Erfolg",
-          text: `✅ Team "${team}" wurde gelöscht`
-        });
-
-        // Teams neu laden
-        loadTeams();
-
-        return true; // Passwort korrekt → Popup schließt
-      } catch (err) {
-        console.error(err);
-        showOrderConfirm({
-          title: "Fehler",
-          text: "❌ Fehler beim Löschen",
-          danger: true
-        });
-        return false;
-      }
+    if (!res.ok) {
+      showOrderConfirm({ title: "Fehler", text: "❌ Falsches Passwort oder Fehler beim Löschen", danger: true });
+      return;
     }
-  });
+
+    // Erfolgreich gelöscht
+    teamEditPopup.classList.add("hidden");
+    deleteTeamPassword.value = "";
+    selectedTeam = "";
+    loadTeams();
+    showOrderConfirm({ title: "Erfolg", text: `✅ Team "${team}" wurde gelöscht` });
+  } catch (err) {
+    console.error(err);
+    showOrderConfirm({ title: "Fehler", text: "❌ Fehler beim Löschen", danger: true });
+  }
 });
 
 
