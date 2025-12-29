@@ -21,20 +21,25 @@ const io = new Server(server, {
 
 // ===================== SESSION =====================
 app.use(session({
-  name: "service.sid",
-  secret: process.env.SERVICE_SECRET,
+  secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
-  cookie: { httpOnly: true, sameSite: "lax", secure: true, maxAge: 1000*60*60*8 }
+  cookie: {
+    httpOnly: true,
+    sameSite: "none", // 🔑 zwingend bei Cross-Domain
+    secure: true,     // 🔑 HTTPS ist vorhanden (Render)
+    maxAge: 1000 * 60 * 60 * 8
+  }
 }));
+
 
 // ===================== MIDDLEWARE =====================
 app.use(express.json());
 app.use(cors({
   origin: "https://bier-scoreboard.vercel.app",
-  methods: ["GET","POST"],
-  credentials: true // ✅ erlaubt Cookies
+  credentials: true
 }));
+
 
 // ===================== LOGIN =====================
 
