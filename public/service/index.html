@@ -80,31 +80,29 @@
       background: #ff0000;
     }
 
-    .password-wrapper {
-    position: relative;
-    display: flex;
-    align-items: center;   /* ← DAS ist der Schlüssel */
-    }
-
-    .password-wrapper input {
-    width: 100%;
-    padding-right: 42px;
-    }
+.password-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;   /* vertikal mittig */
+}
 
 #togglePasswordIcon {
   position: absolute;
   right: 10px;
-  top: 50%;             /* 🔑 oben auf 50% */
-  transform: translateY(-50%); /* 🔑 vertikal mittig */
+  top: 50%;
+  transform: translateY(-50%);
   cursor: pointer;
-  font-size: 1.2rem;
-  color: #aaa;
   display: flex;
   align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  color: white;          /* 🔑 Weiß */
 }
 
 .password-wrapper input {
-  line-height: 1.5rem; /* an die Schriftgröße anpassen */
+  width: 100%;
+  padding-right: 42px;   /* Platz für Icon */
 }
 
 
@@ -117,8 +115,16 @@
 
 <div class="password-wrapper">
   <input type="password" id="password" placeholder="Passwort eingeben">
-  <span id="togglePasswordIcon">🔒</span>
+  <span id="togglePasswordIcon">
+    <!-- Start-SVG Kreis+Halbkreis geschlossen -->
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"></circle>
+      <path d="M12 2 A10 10 0 0 1 12 22"></path>
+      <line x1="4" y1="4" x2="20" y2="20" stroke="white"></line> <!-- durchgestrichen -->
+    </svg>
+  </span>
 </div>
+
 
 
     <button class="primary" id="loginBtn">Login</button>
@@ -137,8 +143,22 @@
 toggleIcon.addEventListener("click", () => {
   const isPassword = passwordInput.type === "password";
   passwordInput.type = isPassword ? "text" : "password";
-  toggleIcon.textContent = isPassword ? "🔓" : "🔒";
+
+  // SVG wechseln (Kreis halb + durchgestrichen vs offen)
+  toggleIcon.innerHTML = isPassword
+    ? `
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"></circle>
+      <path d="M12 2 A10 10 0 0 1 12 22"></path>
+    </svg>`
+    : `
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"></circle>
+      <path d="M12 2 A10 10 0 0 1 12 22"></path>
+      <line x1="4" y1="4" x2="20" y2="20" stroke="white"></line>
+    </svg>`;
 });
+
 
 
     // Login
