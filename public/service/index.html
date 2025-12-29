@@ -91,16 +91,22 @@
     padding-right: 42px;
     }
 
-    #togglePasswordIcon {
-    position: absolute;
-    right: 10px;
-    cursor: pointer;
-    font-size: 1.2rem;
-    color: #aaa;
-    display: flex;
-    align-items: center;
-    height: 100%;          /* ← volle Höhe der Input-Zeile */
-    }
+#togglePasswordIcon {
+  position: absolute;
+  right: 10px;
+  top: 50%;             /* 🔑 oben auf 50% */
+  transform: translateY(-50%); /* 🔑 vertikal mittig */
+  cursor: pointer;
+  font-size: 1.2rem;
+  color: #aaa;
+  display: flex;
+  align-items: center;
+}
+
+.password-wrapper input {
+  line-height: 1.5rem; /* an die Schriftgröße anpassen */
+}
+
 
   </style>
 </head>
