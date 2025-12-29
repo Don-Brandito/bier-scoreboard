@@ -1,5 +1,5 @@
 // ===================== ENV =====================
-require("dotenv").config(); // ganz oben
+require("dotenv").config();
 const path = require("path");
 
 // ===================== MODULE =====================
@@ -14,36 +14,40 @@ const cors = require("cors");
 const app = express();
 const server = http.createServer(app);
 
-// ===================== SOCKET.IO =====================
-const io = new Server(server, {
-  cors: { origin: "https://bier-scoreboard.vercel.app", methods: ["GET","POST"] }
-});
+// ===================== MIDDLEWARE =====================
+app.use(express.json());
 
-// ===================== SESSION =====================
+// CORS für Frontend
+app.use(cors({
+  origin: "https://bier-scoreboard.vercel.app",
+  credentials: true
+}));
+
+// OPTIONS Preflight
+app.options("*", cors({
+  origin: "https://bier-scoreboard.vercel.app",
+  credentials: true
+}));
+
+// Session Middleware
 app.use(session({
   secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
   cookie: {
     httpOnly: true,
-    sameSite: "none", // 🔑 zwingend bei Cross-Domain
-    secure: true,     // 🔑 HTTPS ist vorhanden (Render)
+    sameSite: "none",
+    secure: true,
     maxAge: 1000 * 60 * 60 * 8
   }
 }));
 
-
-// ===================== MIDDLEWARE =====================
-app.use(express.json());
-app.use(cors({
-  origin: "https://bier-scoreboard.vercel.app",
-  credentials: true
-}));
-
+// ===================== SOCKET.IO =====================
+const io = new Server(server, {
+  cors: { origin: "https://bier-scoreboard.vercel.app", methods: ["GET","POST"], credentials: true }
+});
 
 // ===================== LOGIN =====================
-
-// GET /service: Login oder Panel
 app.get("/service", (req, res) => {
   if (req.session.loggedIn) {
     res.sendFile(path.join(__dirname, "service/panel.html"));
@@ -52,19 +56,20 @@ app.get("/service", (req, res) => {
   }
 });
 
-// POST /service/login: Passwort prüfen
 app.post("/service/login", (req, res) => {
   const { password } = req.body;
-  
+
   if (password === process.env.SERVICE_PASS) {
     req.session.loggedIn = true;
-    return res.json({ ok: true });
+    req.session.save(err => {
+      if (err) console.error("Session Save Fehler", err);
+      return res.json({ ok: true });
+    });
   } else {
     return res.status(401).json({ error: "Falsches Passwort" });
   }
 });
 
-// ===================== LOGOUT =====================
 app.post("/service/logout", (req, res) => {
   req.session.destroy(() => res.json({ ok: true }));
 });
@@ -107,7 +112,6 @@ const TeamSchema = new mongoose.Schema({
 });
 const Team = mongoose.model("Team", TeamSchema);
 
-// ===================== DRINK MAP =====================
 const DRINK_FIELD_MAP = {
   "Bier": "Bier",
   "Radler": "Radler",
