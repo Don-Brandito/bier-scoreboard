@@ -381,25 +381,40 @@ const teamList = document.getElementById("teamList");
 async function loadTeams() {
   try {
     const res = await authFetch(`${API_BASE}/api/teams`);
+
+    // Falls authFetch aus irgendeinem Grund doch kein Redirect macht
+    if (!res.ok) return;
+
     const teams = await res.json();
+
     teamList.innerHTML = "";
+
     teams.forEach(team => {
       const li = document.createElement("li");
       li.textContent = `${team.name} – ${team.points} Punkte`;
+
       li.addEventListener("click", () => {
         selectedTeam = team.name;
-        document.querySelectorAll("#teamList li").forEach(x => x.classList.remove("active"));
+
+        document
+          .querySelectorAll("#teamList li")
+          .forEach(x => x.classList.remove("active"));
+
         li.classList.add("active");
       });
+
       teamList.appendChild(li);
     });
+
   } catch (err) {
+    // KEIN Redirect hier – authFetch kümmert sich darum
     console.error("Teams laden fehlgeschlagen", err);
   }
 }
 
-// direkt nach Definition aufrufen
+// ⬅️ EINZIGER Aufruf (wichtig!)
 loadTeams();
+
 
 
 
@@ -775,13 +790,16 @@ input.addEventListener("input", () => {
     }
 });
 
-fetch(`${API_BASE}/api/teams`)
+authFetch(`${API_BASE}/api/teams`)
   .then(res => res.json())
   .then(teams => {
     renderTeams(teams);
     updateTeamList(teams);
   })
-  .catch(err => console.error("Teams laden fehlgeschlagen", err));
+  .catch(() => {
+    // authFetch handled Redirect
+  });
+
 
 
 })
