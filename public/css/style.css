@@ -3,9 +3,11 @@
 =========================================== */
 
 :root {
-  --header-height: 80px;   /* oder deine exakte Höhe */
-   --footer-height: clamp(60px, 8vh, 120px);
+  --header-height: 80px;   /* oder deine exakte HÃ¶he */
+  --footer-height: 100px;   /* oder deine exakte HÃ¶he */
 }
+
+
 
 html, body {
   width: 100%;
@@ -53,7 +55,7 @@ html, body {
   width: auto;
   object-fit: contain;
   display: block;
-  margin: 0 40px; /* gleiche Abstände wie dein altes Layout */
+  margin: 0 40px; /* gleiche AbstÃ¤nde wie dein altes Layout */
 }
 
 
@@ -74,23 +76,23 @@ html, body {
 
 .footer-bar {
     position: fixed;        /* immer am Bildschirm kleben */
-    bottom: 0;              /* unten abschließen */
+    bottom: 0;              /* unten abschlieÃŸen */
     left: 0;
     width: 100%;            /* volle Bildschirmbreite */
     
     background: #000;       /* schwarz */
-    color: #fff;            /* weißer Text */
+    color: #fff;            /* weiÃŸer Text */
     
     text-align: center;
     padding: 1px 0;
     font-size: 0.5em;
     letter-spacing: 1px;
 
-    z-index: 9999;          /* über allem */
+    z-index: 9999;          /* Ã¼ber allem */
 }
 
 /* ===========================================
-   MASKEN (links + rechts) — robust & fehlerfrei
+   MASKEN (links + rechts) â€” robust & fehlerfrei
    (ersetze deinen bisherigen .mask-Block damit)
 =========================================== */
 
@@ -199,10 +201,10 @@ html, body {
 }
 
 /* ===========================================
-   ÜBERLAPPENDE ANZEIGE (POINTS + DRINKS)
+   ÃœBERLAPPENDE ANZEIGE (POINTS + DRINKS)
 =========================================== */
 
-/* Beide überlagern sich exakt */
+/* Beide Ã¼berlagern sich exakt */
 .col-switch {
   position: relative;
   width: 100%;
@@ -224,13 +226,13 @@ html, body {
 .display.hidden { opacity: 0; }
 
 /* ===========================================
-   Punkte rechtsbündig & stark hervorgehoben
-   Allgemeine Standardgröße (Platz 4+)
+   Punkte rechtsbÃ¼ndig & stark hervorgehoben
+   Allgemeine StandardgrÃ¶ÃŸe (Platz 4+)
 =========================================== */
 
 .display.points {
   text-align: right;
-  font-size: 1px;       /* Standardgröße */
+  font-size: 1px;       /* StandardgrÃ¶ÃŸe */
   font-weight: 800;
   letter-spacing: 1px;
   line-height: 1;        /* verhindert Hoch-/Tiefspringen */
@@ -238,14 +240,14 @@ html, body {
 
 .display.points::after {
   content: " PKT";
-  font-size: 8px;        /* Standardgröße */
+  font-size: 8px;        /* StandardgrÃ¶ÃŸe */
   font-weight: 500;
   opacity: 0.8;
   margin-left: 6px;
   line-height: 1;
 }
 
-/* Plätze 4+ kleiner erzwingen */
+/* PlÃ¤tze 4+ kleiner erzwingen */
 .row.ticker .display.points {
     font-size: 20px !important;
 }
@@ -255,21 +257,21 @@ html, body {
 }
 
 /* ===========================================
-   Top 3 – größere Punkte
+   Top 3 â€“ grÃ¶ÃŸere Punkte
 =========================================== */
 
 .row.top .display.points {
-  font-size: 28px;        /* große Punkte */
+  font-size: 28px;        /* groÃŸe Punkte */
 }
 
 .row.top .display.points::after {
-  font-size: 12px;        /* großes "PKT" */
+  font-size: 12px;        /* groÃŸes "PKT" */
 }
 
 
 
 /* ===========================================
-   Getränke linksbündig, Icons klein
+   GetrÃ¤nke linksbÃ¼ndig, Icons klein
 =========================================== */
 
 .display.drinks {
@@ -315,7 +317,7 @@ html, body {
 }
 
 /* ===========================================
-   PUNKTEVERGABE – FULL WIDTH TICKER
+   PUNKTEVERGABE â€“ FULL WIDTH TICKER
 =========================================== */
 
 #punktevergabe-wrap {
@@ -327,7 +329,7 @@ html, body {
   background: #550000;
   border-top: 4px solid #aa0000;
   padding-top: 0px;
-  padding-bottom: 30px; /* Platz für den fixen Balken */
+  padding-bottom: 30px; /* Platz fÃ¼r den fixen Balken */
 }
 
 .punkte-title {
@@ -374,10 +376,10 @@ html, body {
 .ticker-item {
     display: inline-flex;
     align-items: center;
-    width: 160px;          /* 👉 alle Blöcke gleich breit */
+    width: 160px;          /* ðŸ‘‰ alle BlÃ¶cke gleich breit */
     justify-content: center;  
     margin: 0 10px;
-    text-align: left;      /* Textblock bleibt linksbündig */
+    text-align: left;      /* Textblock bleibt linksbÃ¼ndig */
     gap: 15px;
 }
 
@@ -413,7 +415,7 @@ html, body {
     margin-left: 2px;
     letter-spacing: 1px;
     position: relative;
-    top: -4px;                 /* 👉 hebt PKT nach oben */
+    top: -4px;                 /* ðŸ‘‰ hebt PKT nach oben */
 }
 
 
@@ -691,7 +693,7 @@ header h1{margin:0;font-size:18px;letter-spacing:0.4px;opacity:0.95}
   opacity: 0.6;
   font-size: 18px;
   padding: 0 6px;
-  padding: 0 25px;   /* ← Abstand links & rechts vom Punkt */
+  padding: 0 25px;   /* â† Abstand links & rechts vom Punkt */
   color: #ffffff;
   opacity: 1;
 }
@@ -727,467 +729,118 @@ header h1{margin:0;font-size:18px;letter-spacing:0.4px;opacity:0.95}
   font-weight: 800;
 }
 
-/* =====================================================
-   BASIS – NICHT SICHTBAR, NUR SKALIERUNG
-===================================================== */
-
-html {
-  font-size: clamp(14px, 1vw, 22px);
-}
-
-body {
-  margin: 0;
-  background: #111;
-  color: #fff;
-  overflow-x: hidden;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-}
 
 /* =====================================================
-   SCOREBOARD CONTAINER – UNVERÄNDERTES LAYOUT
-===================================================== */
-
-#scoreboard-wrapper {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-}
-
-#scoreboard {
-  position: relative;
-  width: 100%;
-  max-width: 100%;
-}
-
-/* =====================================================
-   SCOREBOARD ROWS – OPTIK GLEICH, NUR SKALIEREND
-===================================================== */
-
-.row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-
-  background: #000;
-
-  /* vorher fixe Höhe → jetzt skalierend */
-  height: clamp(56px, 7vh, 96px);
-
-  /* vorher px → jetzt proportional */
-  padding: 0 clamp(12px, 2vw, 28px);
-}
-
-/* =====================================================
-   TEAMNAME – KEIN UMBAU, NUR FONT-SCALING
-===================================================== */
-
-.team-name {
-  font-size: clamp(1.2rem, 2.2vw, 2.8rem);
-  line-height: 1.1;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-/* =====================================================
-   PUNKTEANZEIGE – POSITION BLEIBT IDENTISCH
-===================================================== */
-
-.team-points {
-  font-size: clamp(1rem, 1.8vw, 2.4rem);
-  margin-left: clamp(12px, 2vw, 32px);
-  white-space: nowrap;
-}
-
-/* =====================================================
-   MASKEN – OPTIK GLEICH, NUR RESPONSIVE
-===================================================== */
-
-.mask-left,
-.mask-right {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-
-  /* vorher fix → jetzt skalierend */
-  width: clamp(60px, 10vw, 240px);
-
-  pointer-events: none;
-  z-index: 10;
-}
-
-.mask-left {
-  left: 0;
-  background: linear-gradient(to right, #111 70%, transparent);
-}
-
-.mask-right {
-  right: 0;
-  background: linear-gradient(to left, #111 70%, transparent);
-}
-
-/* =====================================================
-   CENTER SPOT / OVERLAYS – NUR SKALIERUNG
-===================================================== */
-
-#centerSpot {
-  font-size: clamp(1.4rem, 3vw, 4rem);
-}
-
-/* =====================================================
-   MOBILE – NUR DAS NÖTIGSTE, KEIN RE-LAYOUT
+   SMARTPHONE RESPONSIVE (APPEND ONLY)
+   NUR Mobile – Desktop & TV bleiben unberührt
 ===================================================== */
 
 @media (max-width: 768px) {
 
-  /* Masken weg, sonst nichts */
+  /* Masken aus */
+  .mask,
   .mask-left,
   .mask-right {
-    display: none;
+    display: none !important;
   }
 
-  /* etwas weniger Höhe, aber gleiche Struktur */
+  /* Header kompakter */
+  #header {
+    padding: 20px 0;
+  }
+
+  #header h1 {
+    font-size: 1.1rem;
+  }
+
+  .header-logo {
+    height: 44px;
+    margin: 0 16px;
+  }
+
+  /* Scoreboard nutzt volle Breite */
+  #scoreboard-wrap {
+    left: 0;
+    right: 0;
+  }
+
+  #scoreboard {
+    padding: 12px;
+    gap: 8px;
+    border-radius: 0;
+  }
+
+  /* Reihen kompakter */
   .row {
-    height: clamp(48px, 8vh, 64px);
-    padding: 0 12px;
+    grid-template-columns: 42px 1fr 1fr;
+    font-size: 14px;
+    padding: 8px 6px;
+    min-height: 26px;
+    height: auto;
   }
 
+  /* Top 3 weiterhin hervorgehoben, aber nicht riesig */
+  .row.top {
+    font-size: 18px;
+  }
+
+  /* Positions-Icons kleiner */
+  .col.pos img.platz-icon {
+    height: 22px;
+  }
+
+  /* Teamnamen umbrechbar */
   .team-name {
-    font-size: clamp(1.1rem, 5vw, 1.6rem);
+    white-space: normal;
+    line-height: 1.1;
   }
 
-  .team-points {
-    font-size: clamp(0.9rem, 4vw, 1.4rem);
-  }
-}
-
-/* =====================================================
-   SEHR GROSSE SCREENS (70" TV)
-===================================================== */
-
-@media (min-width: 2000px) {
-
-  .row {
-    height: clamp(90px, 9vh, 120px);
+  /* Punkte kleiner & platzsparend */
+  .display.points {
+    font-size: 16px !important;
   }
 
-  .team-name {
-    font-size: 3rem;
+  .display.points::after {
+    font-size: 9px !important;
+    margin-left: 4px;
   }
 
-  .team-points {
-    font-size: 2.6rem;
-  }
-}
-
-#scoreboard-wrapper {
-  position: relative;
-}
-
-#scoreboard {
-  position: relative;
-  z-index: 1;
-}
-
-.mask-left,
-.mask-right {
-  z-index: 5; /* höher als Punkte & Text */
-}
-
-@media (min-width: 1600px) {
-
-  .row:not(.rank-1):not(.rank-2):not(.rank-3) .team-name {
-    font-size: clamp(2rem, 2.6vw, 3rem);
+  /* Getränke-Icons kompakter */
+  .display.drinks {
+    padding-left: 24px;
+    gap: 6px 10px;
   }
 
-  .row:not(.rank-1):not(.rank-2):not(.rank-3) .team-points {
-    font-size: clamp(1.8rem, 2.4vw, 2.8rem);
-  }
-}
-
-@media (max-width: 768px) {
-
-  .mask-left,
-  .mask-right {
-    display: none;
+  .drink-item img {
+    width: 14px;
+    height: 14px;
   }
 
-  .team-name {
-    font-size: clamp(1.2rem, 5vw, 1.7rem);
+  .drink-count {
+    font-size: 14px;
   }
 
-  .team-points {
-    font-size: clamp(1rem, 4.5vw, 1.4rem);
-  }
-}
-
-.mask-left,
-.mask-right {
-  top: -5vh;
-  bottom: -5vh;
-}
-.mask-left,
-.mask-right {
-  position: absolute;
-}
-@media (max-width: 768px) {
-  .mask-left,
-  .mask-right {
-    display: none;
-  }
-}
-@media (min-width: 1600px) {
-  .mask-left,
-  .mask-right {
-    top: -8vh;
-    bottom: -8vh;
+  /* Punktevergabe-Ticker besser lesbar */
+  #punktevergabe-wrap {
+    padding-bottom: 18px;
   }
 
-}
-footer {
-  height: var(--footer-height);
-}
-
-.mask-left,
-.mask-right {
-  position: absolute;
-  top: 0;
-  bottom: var(--footer-height);
-}
-
-@media (min-width: 1600px) {
-  .mask-left,
-  .mask-right {
-    bottom: calc(var(--footer-height) - 2vh);
-  }
-}
-
-@media (max-width: 768px) {
-  .mask-left,
-  .mask-right {
-    display: none;
-  }
-}
-
-/* =====================================================
-   ROOT / GLOBAL
-===================================================== */
-
-:root{
-  --header-height: 80px;
-  --footer-height: clamp(60px, 8vh, 120px);
-
-  --row-big: clamp(90px, 10vh, 140px);   /* Plätze 1–3 */
-  --row-small: clamp(50px, 6vh, 80px);   /* Plätze 4–8 */
-}
-
-html, body{
-  margin:0;
-  height:100%;
-  background:#111;
-  color:#fff;
-  font-family: Inter, system-ui, Arial, sans-serif;
-  overflow:hidden;
-}
-
-/* =====================================================
-   HEADER
-===================================================== */
-
-#header{
-  height:var(--header-height);
-  background:#4b0000;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:0 40px;
-  border-bottom:4px solid #a00000;
-}
-
-/* =====================================================
-   FOOTER
-===================================================== */
-
-.footer-bar{
-  position:fixed;
-  left:0;
-  bottom:0;
-  height:var(--footer-height);
-  width:100%;
-  background:#000;
-  z-index:50;
-}
-
-/* =====================================================
-   MASKEN – SAUBER AM FOOTER ANGEDOCKT
-===================================================== */
-
-.mask{
-  position:fixed;
-  top:var(--header-height);
-  bottom:var(--footer-height);
-  width:clamp(80px, 14vw, 220px);
-  opacity:0.25;
-  pointer-events:none;
-  z-index:20;
-}
-
-.mask-left{ left:0; }
-.mask-right{ right:0; }
-
-/* =====================================================
-   SCOREBOARD WRAP
-===================================================== */
-
-#scoreboard-wrap{
-  position:fixed;
-  top:var(--header-height);
-  bottom:var(--footer-height);
-  left:0;
-  width:100%;
-  overflow:hidden;
-  z-index:10;
-}
-
-#scoreboard{
-  display:flex;
-  flex-direction:column;
-  gap:12px;
-  padding:24px;
-}
-
-/* =====================================================
-   ROWS
-===================================================== */
-
-.row{
-  display:grid;
-  grid-template-columns: 70px 1fr auto;
-  align-items:center;
-  padding:0 16px;
-  border-bottom:1px solid rgba(255,255,255,0.1);
-  font-size:18px;
-}
-
-/* Top 3 */
-.row.top{
-  height:var(--row-big);
-  font-size:clamp(26px, 2.6vw, 40px);
-  background:rgba(255,255,255,0.08);
-}
-
-/* Platz 4–8 */
-.row.ticker{
-  height:var(--row-small);
-  font-size:clamp(18px, 1.8vw, 28px);
-}
-
-/* =====================================================
-   TEAMNAME
-===================================================== */
-
-.team-name{
-  font-weight:800;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-}
-
-/* =====================================================
-   POINTS
-===================================================== */
-
-.display.points{
-  font-weight:900;
-  text-align:right;
-}
-
-.row.top .display.points{
-  font-size:clamp(32px, 3vw, 48px);
-}
-
-.row.ticker .display.points{
-  font-size:clamp(20px, 2vw, 30px);
-}
-
-.display.points::after{
-  content:" PKT";
-  font-size:0.4em;
-  opacity:0.7;
-  margin-left:6px;
-}
-
-/* =====================================================
-   MOBILE
-===================================================== */
-
-@media (max-width:768px){
-
-  .mask{ display:none; }
-
-  .row.top{
-    height:72px;
-    font-size:22px;
+  .punkte-title {
+    font-size: 0.9em;
   }
 
-  .row.ticker{
-    height:48px;
-    font-size:16px;
-  }
-}
-
-/* =====================================================
-   TV
-===================================================== */
-
-@media (min-width:1600px){
-
-  .row.top{
-    font-size:clamp(36px, 3.4vw, 52px);
+  .ticker-item {
+    width: 130px;
+    gap: 10px;
   }
 
-  .row.ticker{
-    font-size:clamp(24px, 2.6vw, 36px);
-  }
-}
-
-/* =====================================================
-   RESPONSIVE FIXES – FINAL (append only)
-===================================================== */
-
-:root{
-  --footer-height: clamp(60px, 8vh, 120px);
-}
-
-/* Footer-Höhe fix */
-.footer-bar{
-  height: var(--footer-height);
-}
-
-/* Masken sauber an Footer andocken */
-.mask-left,
-.mask-right{
-  position: fixed;
-  top: var(--header-height, 80px);
-  bottom: var(--footer-height);
-}
-
-/* TV – bessere Lesbarkeit */
-@media (min-width:1600px){
-  .row.top{
-    font-size: clamp(36px, 3.4vw, 52px);
+  .drink-icon {
+    height: 22px;
   }
 
-  .row.ticker{
-    font-size: clamp(24px, 2.6vw, 36px);
+  .drink-name,
+  .drink-points {
+    font-size: 0.8em;
   }
-}
 
-/* Mobile – Masken aus */
-@media (max-width:768px){
-  .mask-left,
-  .mask-right{
-    display:none;
-  }
 }
