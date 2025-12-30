@@ -7,11 +7,6 @@
   --footer-height: 100px;   /* oder deine exakte Höhe */
 }
 
-html {
-  font-size: clamp(14px, 1.2vw, 32px);
-}
-
-
 html, body {
   width: 100%;
   min-height: 100vh;
@@ -732,208 +727,156 @@ header h1{margin:0;font-size:18px;letter-spacing:0.4px;opacity:0.95}
   font-weight: 800;
 }
 
-
-/* ===========================================
-   GLOBAL – RESPONSIVE BASIS
-=========================================== */
-
-:root {
-  --header-height: clamp(56px, 8vh, 100px);
-  --footer-height: clamp(60px, 10vh, 120px);
-}
+/* =====================================================
+   BASIS – NICHT SICHTBAR, NUR SKALIERUNG
+===================================================== */
 
 html {
-  font-size: clamp(14px, 1.2vw, 32px);
+  font-size: clamp(14px, 1vw, 22px);
 }
 
-html, body {
-  width: 100%;
-  min-height: 100vh;
+body {
   margin: 0;
-  padding: 0;
-  overflow-x: hidden;
   background: #111;
   color: #fff;
+  overflow-x: hidden;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
-/* ===========================================
-   LAYOUT CONTAINER
-=========================================== */
-
-#app {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-}
-
-/* ===========================================
-   HEADER
-=========================================== */
-
-header {
-  height: var(--header-height);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: clamp(1.2rem, 3vw, 3rem);
-}
-
-/* ===========================================
-   SCOREBOARD WRAPPER
-=========================================== */
+/* =====================================================
+   SCOREBOARD CONTAINER – UNVERÄNDERTES LAYOUT
+===================================================== */
 
 #scoreboard-wrapper {
   position: relative;
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  width: 100%;
+  height: 100%;
   overflow: hidden;
 }
 
-/* ===========================================
-   SCOREBOARD
-=========================================== */
-
 #scoreboard {
+  position: relative;
   width: 100%;
-  max-width: 1600px;
-  display: flex;
-  flex-direction: column;
-  gap: clamp(6px, 1vh, 14px);
-  padding: 0 clamp(12px, 4vw, 64px);
+  max-width: 100%;
 }
 
-/* ===========================================
-   SCOREBOARD ROW
-=========================================== */
+/* =====================================================
+   SCOREBOARD ROWS – OPTIK GLEICH, NUR SKALIEREND
+===================================================== */
 
 .row {
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  background: #000;
-  border-radius: 6px;
+  align-items: center;
+  justify-content: space-between;
 
-  min-height: clamp(48px, 6vh, 96px);
-  padding: clamp(6px, 1vh, 14px) clamp(10px, 2vw, 24px);
+  background: #000;
+
+  /* vorher fixe Höhe → jetzt skalierend */
+  height: clamp(56px, 7vh, 96px);
+
+  /* vorher px → jetzt proportional */
+  padding: 0 clamp(12px, 2vw, 28px);
 }
 
-/* ===========================================
-   TEAM NAME
-=========================================== */
+/* =====================================================
+   TEAMNAME – KEIN UMBAU, NUR FONT-SCALING
+===================================================== */
 
 .team-name {
-  font-size: clamp(1.1rem, 2.5vw, 2.8rem);
-  line-height: 1.15;
-  text-align: left;
+  font-size: clamp(1.2rem, 2.2vw, 2.8rem);
+  line-height: 1.1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-/* ===========================================
-   TEAM POINTS (unter Name)
-=========================================== */
+/* =====================================================
+   PUNKTEANZEIGE – POSITION BLEIBT IDENTISCH
+===================================================== */
 
 .team-points {
-  margin-top: 0.2em;
-  font-size: clamp(0.9rem, 1.8vw, 2.2rem);
-  opacity: 0.85;
-  text-align: left;
+  font-size: clamp(1rem, 1.8vw, 2.4rem);
+  margin-left: clamp(12px, 2vw, 32px);
+  white-space: nowrap;
 }
 
-/* ===========================================
-   MASKEN LINKS / RECHTS
-=========================================== */
+/* =====================================================
+   MASKEN – OPTIK GLEICH, NUR RESPONSIVE
+===================================================== */
 
 .mask-left,
 .mask-right {
   position: absolute;
   top: 0;
   bottom: 0;
-  width: clamp(40px, 8vw, 220px);
+
+  /* vorher fix → jetzt skalierend */
+  width: clamp(60px, 10vw, 240px);
+
   pointer-events: none;
-  z-index: 5;
+  z-index: 10;
 }
 
 .mask-left {
   left: 0;
-  background: linear-gradient(to right, #111 60%, transparent);
+  background: linear-gradient(to right, #111 70%, transparent);
 }
 
 .mask-right {
   right: 0;
-  background: linear-gradient(to left, #111 60%, transparent);
+  background: linear-gradient(to left, #111 70%, transparent);
 }
 
-/* ===========================================
-   CENTER SPOT / OVERLAYS
-=========================================== */
+/* =====================================================
+   CENTER SPOT / OVERLAYS – NUR SKALIERUNG
+===================================================== */
 
 #centerSpot {
-  font-size: clamp(1.2rem, 3vw, 4rem);
+  font-size: clamp(1.4rem, 3vw, 4rem);
 }
 
-/* ===========================================
-   FOOTER
-=========================================== */
-
-footer {
-  height: var(--footer-height);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  background: #000;
-  color: #fff;
-  font-size: clamp(0.8rem, 1.5vw, 1.4rem);
-  letter-spacing: 1px;
-  z-index: 10;
-}
-
-/* ===========================================
-   MOBILE OPTIMIERUNG (HOCHKANT)
-=========================================== */
+/* =====================================================
+   MOBILE – NUR DAS NÖTIGSTE, KEIN RE-LAYOUT
+===================================================== */
 
 @media (max-width: 768px) {
 
-  /* Masken komplett deaktivieren */
+  /* Masken weg, sonst nichts */
   .mask-left,
   .mask-right {
-    display: none !important;
+    display: none;
   }
 
-  #scoreboard {
-    padding-left: 0;
-    padding-right: 0;
-  }
-
+  /* etwas weniger Höhe, aber gleiche Struktur */
   .row {
-    border-radius: 0;
+    height: clamp(48px, 8vh, 64px);
+    padding: 0 12px;
+  }
+
+  .team-name {
+    font-size: clamp(1.1rem, 5vw, 1.6rem);
+  }
+
+  .team-points {
+    font-size: clamp(0.9rem, 4vw, 1.4rem);
   }
 }
 
-/* ===========================================
-   ULTRA GROSSE SCREENS (TV / BEAMER)
-=========================================== */
+/* =====================================================
+   SEHR GROSSE SCREENS (70" TV)
+===================================================== */
 
 @media (min-width: 2000px) {
 
-  #scoreboard {
-    max-width: 2400px;
-  }
-
   .row {
-    border-radius: 10px;
+    height: clamp(90px, 9vh, 120px);
   }
-}
 
-/* ===========================================
-   REDUZIERTE BEWEGUNG (OPTIONAL)
-=========================================== */
+  .team-name {
+    font-size: 3rem;
+  }
 
-@media (prefers-reduced-motion: reduce) {
-  * {
-    animation-duration: 0.01ms !important;
-    transition-duration: 0.01ms !important;
+  .team-points {
+    font-size: 2.6rem;
   }
 }
