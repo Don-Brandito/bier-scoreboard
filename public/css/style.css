@@ -969,3 +969,225 @@ footer {
     display: none;
   }
 }
+
+/* =====================================================
+   ROOT / GLOBAL
+===================================================== */
+
+:root{
+  --header-height: 80px;
+  --footer-height: clamp(60px, 8vh, 120px);
+
+  --row-big: clamp(90px, 10vh, 140px);   /* Plätze 1–3 */
+  --row-small: clamp(50px, 6vh, 80px);   /* Plätze 4–8 */
+}
+
+html, body{
+  margin:0;
+  height:100%;
+  background:#111;
+  color:#fff;
+  font-family: Inter, system-ui, Arial, sans-serif;
+  overflow:hidden;
+}
+
+/* =====================================================
+   HEADER
+===================================================== */
+
+#header{
+  height:var(--header-height);
+  background:#4b0000;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 40px;
+  border-bottom:4px solid #a00000;
+}
+
+/* =====================================================
+   FOOTER
+===================================================== */
+
+.footer-bar{
+  position:fixed;
+  left:0;
+  bottom:0;
+  height:var(--footer-height);
+  width:100%;
+  background:#000;
+  z-index:50;
+}
+
+/* =====================================================
+   MASKEN – SAUBER AM FOOTER ANGEDOCKT
+===================================================== */
+
+.mask{
+  position:fixed;
+  top:var(--header-height);
+  bottom:var(--footer-height);
+  width:clamp(80px, 14vw, 220px);
+  opacity:0.25;
+  pointer-events:none;
+  z-index:20;
+}
+
+.mask-left{ left:0; }
+.mask-right{ right:0; }
+
+/* =====================================================
+   SCOREBOARD WRAP
+===================================================== */
+
+#scoreboard-wrap{
+  position:fixed;
+  top:var(--header-height);
+  bottom:var(--footer-height);
+  left:0;
+  width:100%;
+  overflow:hidden;
+  z-index:10;
+}
+
+#scoreboard{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  padding:24px;
+}
+
+/* =====================================================
+   ROWS
+===================================================== */
+
+.row{
+  display:grid;
+  grid-template-columns: 70px 1fr auto;
+  align-items:center;
+  padding:0 16px;
+  border-bottom:1px solid rgba(255,255,255,0.1);
+  font-size:18px;
+}
+
+/* Top 3 */
+.row.top{
+  height:var(--row-big);
+  font-size:clamp(26px, 2.6vw, 40px);
+  background:rgba(255,255,255,0.08);
+}
+
+/* Platz 4–8 */
+.row.ticker{
+  height:var(--row-small);
+  font-size:clamp(18px, 1.8vw, 28px);
+}
+
+/* =====================================================
+   TEAMNAME
+===================================================== */
+
+.team-name{
+  font-weight:800;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+/* =====================================================
+   POINTS
+===================================================== */
+
+.display.points{
+  font-weight:900;
+  text-align:right;
+}
+
+.row.top .display.points{
+  font-size:clamp(32px, 3vw, 48px);
+}
+
+.row.ticker .display.points{
+  font-size:clamp(20px, 2vw, 30px);
+}
+
+.display.points::after{
+  content:" PKT";
+  font-size:0.4em;
+  opacity:0.7;
+  margin-left:6px;
+}
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media (max-width:768px){
+
+  .mask{ display:none; }
+
+  .row.top{
+    height:72px;
+    font-size:22px;
+  }
+
+  .row.ticker{
+    height:48px;
+    font-size:16px;
+  }
+}
+
+/* =====================================================
+   TV
+===================================================== */
+
+@media (min-width:1600px){
+
+  .row.top{
+    font-size:clamp(36px, 3.4vw, 52px);
+  }
+
+  .row.ticker{
+    font-size:clamp(24px, 2.6vw, 36px);
+  }
+}
+
+/* =====================================================
+   RESPONSIVE FIXES – FINAL (append only)
+===================================================== */
+
+:root{
+  --footer-height: clamp(60px, 8vh, 120px);
+}
+
+/* Footer-Höhe fix */
+.footer-bar{
+  height: var(--footer-height);
+}
+
+/* Masken sauber an Footer andocken */
+.mask-left,
+.mask-right{
+  position: fixed;
+  top: var(--header-height, 80px);
+  bottom: var(--footer-height);
+}
+
+/* TV – bessere Lesbarkeit */
+@media (min-width:1600px){
+  .row.top{
+    font-size: clamp(36px, 3.4vw, 52px);
+  }
+
+  .row.ticker{
+    font-size: clamp(24px, 2.6vw, 36px);
+  }
+}
+
+/* Mobile – Masken aus */
+@media (max-width:768px){
+  .mask-left,
+  .mask-right{
+    display:none;
+  }
+}
