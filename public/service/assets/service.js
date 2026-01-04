@@ -315,7 +315,7 @@ renameTeamBtn.addEventListener("click", async () => {
       method: "POST",
       credentials: "include",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ oldName, newName })
+      body: JSON.stringify({ teamName: oldName, newName })
     });
     if (!res.ok) throw new Error("Fehler beim Umbennen");
 
