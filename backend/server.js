@@ -157,7 +157,7 @@ app.post("/api/renameTeam", async (req, res) => {
     return res.status(401).json({ error: "Nicht eingeloggt" });
   }
 
-  const { oldName, newName } = req.body;
+  const { teamName: oldName, newName } = req.body;
   if (!oldName || !newName) {
     return res.status(400).json({ error: "Name fehlt" });
   }
