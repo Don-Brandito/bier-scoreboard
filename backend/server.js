@@ -12,6 +12,7 @@ const cors = require("cors");
 
 // ===================== APP =====================
 const app = express();
+app.set("trust proxy", 1);
 const server = http.createServer(app);
 
 // ===================== MIDDLEWARE =====================
@@ -24,16 +25,21 @@ app.use(cors({
 }));
 
 // OPTIONS Preflight
-app.options("*", cors({
-  origin: "https://bier-scoreboard.vercel.app",
-  credentials: true
-}));
+app.options(
+  "*",
+  cors({
+    origin: "https://bier-scoreboard.vercel.app",
+    credentials: true
+  })
+);
+
 
 // Session Middleware
 app.use(session({
   secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
+  proxy: true,
   cookie: {
     httpOnly: true,
     sameSite: "none",
@@ -41,6 +47,7 @@ app.use(session({
     maxAge: 1000 * 60 * 60 * 8
   }
 }));
+
 
 // ===================== SOCKET.IO =====================
 const io = new Server(server, {
@@ -149,6 +156,56 @@ app.post("/api/admin/reset", async (req, res) => {
   io.emit("updateScores", []);
   res.json({ ok: true });
 });
+
+// ===================== TEAM UMBENENNEN =====================
+app.post("/api/renameTeam", async (req, res) => {
+  if (!req.session.loggedIn) {
+    return res.status(401).json({ error: "Nicht eingeloggt" });
+  }
+
+  const { teamName: oldName, newName } = req.body;
+  if (!oldName || !newName) {
+    return res.status(400).json({ error: "Name fehlt" });
+  }
+
+  try {
+    await Team.updateOne({ name: oldName }, { $set: { name: newName } });
+    const teams = await Team.find().sort({ points: -1 });
+    io.emit("updateScores", teams);
+    res.json({ ok: true });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Umbenennen fehlgeschlagen" });
+  }
+});
+
+
+// ===================== TEAM LÖSCHEN =====================
+app.post("/api/deleteTeam", async (req, res) => {
+  if (!req.session.loggedIn) {
+    return res.status(401).json({ error: "Nicht eingeloggt" });
+  }
+
+  const { name, password } = req.body;
+  if (!name || !password) {
+    return res.status(400).json({ error: "Name oder Passwort fehlt" });
+  }
+
+  if (password !== process.env.ADMIN_PASS) {
+    return res.status(401).json({ error: "Falsches Passwort" });
+  }
+
+  try {
+    await Team.deleteOne({ name });
+    const teams = await Team.find().sort({ points: -1 });
+    io.emit("updateScores", teams);
+    res.json({ ok: true });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Löschen fehlgeschlagen" });
+  }
+});
+
 
 // ===================== SOCKET.IO EVENTS =====================
 io.on("connection", async socket => {

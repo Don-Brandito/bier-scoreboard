@@ -229,6 +229,7 @@ confirmEventReset.addEventListener("click", async () => {
   try {
    const res = await authFetch(`${API_BASE}/api/admin/reset`, {
       method: "POST",
+      credentials: "include",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ password })
     });
@@ -276,6 +277,7 @@ saveTeam.addEventListener("click", async () => {
 
   await authFetch(`${API_BASE}/api/addTeam`, {
     method: "POST",
+    credentials: "include",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ name })
   });
@@ -311,6 +313,7 @@ renameTeamBtn.addEventListener("click", async () => {
   try {
     const res = await authFetch(`${API_BASE}/api/renameTeam`, {
       method: "POST",
+      credentials: "include",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ oldName, newName })
     });
@@ -338,6 +341,7 @@ deleteTeamBtn.addEventListener("click", async () => {
   try {
     const res = await authFetch(`${API_BASE}/api/deleteTeam`, {
       method: "POST",
+      credentials: "include",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name: team, password })
     });
