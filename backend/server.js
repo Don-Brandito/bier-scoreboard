@@ -150,6 +150,57 @@ app.post("/api/admin/reset", async (req, res) => {
   res.json({ ok: true });
 });
 
+
+// ===================== TEAM UMBENENNEN =====================
+app.post("/api/renameTeam", async (req, res) => {
+  if (!req.session.loggedIn) {
+    return res.status(401).json({ error: "Nicht eingeloggt" });
+  }
+
+  const { oldName, newName } = req.body;
+  if (!oldName || !newName) {
+    return res.status(400).json({ error: "Name fehlt" });
+  }
+
+  try {
+    await Team.updateOne({ name: oldName }, { $set: { name: newName } });
+    const teams = await Team.find().sort({ points: -1 });
+    io.emit("updateScores", teams);
+    res.json({ ok: true });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Umbenennen fehlgeschlagen" });
+  }
+});
+
+
+// ===================== TEAM LÖSCHEN =====================
+app.post("/api/deleteTeam", async (req, res) => {
+  if (!req.session.loggedIn) {
+    return res.status(401).json({ error: "Nicht eingeloggt" });
+  }
+
+  const { name, password } = req.body;
+  if (!name || !password) {
+    return res.status(400).json({ error: "Name oder Passwort fehlt" });
+  }
+
+  if (password !== process.env.ADMIN_PASS) {
+    return res.status(401).json({ error: "Falsches Passwort" });
+  }
+
+  try {
+    await Team.deleteOne({ name });
+    const teams = await Team.find().sort({ points: -1 });
+    io.emit("updateScores", teams);
+    res.json({ ok: true });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Löschen fehlgeschlagen" });
+  }
+});
+
+
 // ===================== SOCKET.IO EVENTS =====================
 io.on("connection", async socket => {
   console.log("🔌 SOCKET CONNECTED", socket.id);
