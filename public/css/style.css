@@ -334,10 +334,10 @@ html, body {
 
 .punkte-title {
     text-align: center;
-    font-size: 1.0em;
-    font-weight: 600;
+    font-size: 0.8em;
+    font-weight: 500;
     color: #fff;
-    margin: 5px 0;
+    margin: 4px 0;
     position: relative;
 }
 
