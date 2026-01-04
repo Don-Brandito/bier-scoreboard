@@ -4,7 +4,7 @@
 
 :root {
   --header-height: 80px;   /* oder deine exakte HÃ¶he */
-  --footer-height: 60px;   /* oder deine exakte HÃ¶he */
+  --footer-height: 80px;   /* oder deine exakte HÃ¶he */
 }
 
 
@@ -329,7 +329,7 @@ html, body {
   background: #550000;
   border-top: 4px solid #aa0000;
   padding-top: 0px;
-  padding-bottom: 30px; /* Platz fÃ¼r den fixen Balken */
+  padding-bottom: 25px; /* Platz fÃ¼r den fixen Balken */
 }
 
 .punkte-title {
