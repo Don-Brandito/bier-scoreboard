@@ -362,35 +362,15 @@ deleteTeamBtn.addEventListener("click", async () => {
 async function loadTeams() {
   try {
     const res = await authFetch(`${API_BASE}/api/teams`);
-
-    // Stop, wenn fetch nicht ok (401 bereits behandelt)
     if (!res.ok) return;
 
     const teams = await res.json();
-
-    teamList.innerHTML = "";
-
-    teams.forEach(team => {
-      const li = document.createElement("li");
-      li.textContent = `${team.name} – ${team.points} Punkte`;
-
-      li.addEventListener("click", () => {
-        selectedTeam = team.name;
-
-        document
-          .querySelectorAll("#teamList li")
-          .forEach(x => x.classList.remove("active"));
-
-        li.classList.add("active");
-      });
-
-      teamList.appendChild(li);
-    });
+    renderTeams(teams); // ✅ NUR DAS
   } catch (err) {
     console.error("Teams laden fehlgeschlagen", err);
-    // Optional: kurze Meldung an Nutzer
   }
 }
+
 
 
 // ⬅️ EINZIGER Aufruf (wichtig!)
@@ -774,8 +754,7 @@ input.addEventListener("input", () => {
 authFetch(`${API_BASE}/api/teams`)
   .then(res => res.json())
   .then(teams => {
-    renderTeams(teams);
-    updateTeamList(teams);
+    renderTeams(teams)
   })
   .catch(() => {
     // authFetch handled Redirect
