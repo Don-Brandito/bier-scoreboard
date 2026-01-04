@@ -329,7 +329,7 @@ html, body {
   background: #550000;
   border-top: 4px solid #aa0000;
   padding-top: 0px;
-  padding-bottom: 25px; /* Platz fÃ¼r den fixen Balken */
+  padding-bottom: 15px; /* Platz fÃ¼r den fixen Balken */
 }
 
 .punkte-title {
