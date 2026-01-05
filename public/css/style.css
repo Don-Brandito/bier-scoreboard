@@ -173,7 +173,7 @@ html, body {
 
 #scoreboardMask {
   top: 65px;
-  bottom: 100px;
+  bottom: 10px;
 }
 
 
@@ -531,7 +531,7 @@ header h1{margin:0;font-size:18px;letter-spacing:0.4px;opacity:0.95}
 .row.small .drinks{font-size:calc(0.25 * var(--row-small))}
 .drink-item{display:inline-flex;gap:8px;align-items:center;white-space:nowrap}
 .drink-item img{height:calc(0.18 * var(--row-big)); width:auto}
-.row.small .drink-item img{height:calc(0.35 * var(--row-small))}
+.row.small .drink-item img{height:calc(0.35 * var(--row-small))}  
 
 /* separator dot */
 .mid-dot{color:rgba(200,200,200,1.0);margin:0 6px;align-self:center;font-size:calc(0.25 * var(--row-big))}
