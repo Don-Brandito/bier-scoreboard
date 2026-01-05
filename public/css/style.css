@@ -170,6 +170,10 @@ html, body {
   z-index: 2;
 }
 
+#scoreboardMask {
+  top: 70px;      /* Abstand vom Header */
+  bottom: 90px;   /* Abstand zum Footer */
+}
 
 
 /* === Zeilenbasis === */
