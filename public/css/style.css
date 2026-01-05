@@ -180,15 +180,14 @@ html, body {
 /* === Zeilenbasis === */
 .row {
   display: grid;
-  grid-template-columns: 70px 1fr 1fr; 
+  grid-template-columns: 70px minmax(220px, 1fr) 260px;
   align-items: center;
-  padding: 14px 10px;
-  border-bottom: 1px solid rgba(255,255,255,0.10);
-  font-size: 18px;
-  height: 30px;
-  min-height: 30px;
-  position: relative;
 
+  height: 34px;
+  min-height: 34px;
+
+  padding: 0 10px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
 }
 
 /* === Top 3 doppelt so hoch === */
@@ -198,6 +197,13 @@ html, body {
   font-size: 26px;
   background: rgba(255,255,255,0.08);
 }
+
+.col.pos {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 
 /* === Position-Spalte === */
 .col.pos img.platz-icon {
@@ -282,12 +288,15 @@ html, body {
 =========================================== */
 
 .display.drinks {
-  text-align: left;
-  padding-left: 40px;
   display: flex;
-  flex-wrap: nowrap !important;
-  gap: 6px 14px;
+  align-items: center;
+  gap: 8px;
+
+  white-space: nowrap;
+  overflow: hidden;          /* 🔥 verhindert Layout-Verschiebung */
+  max-width: 100%;
 }
+
 
 .drink-item img{
   width:18px;
@@ -504,8 +513,7 @@ header h1{margin:0;font-size:18px;letter-spacing:0.4px;opacity:0.95}
 
 /* shared row */
 .row{
-  display:flex;justify-content:space-between;align-items:center;
-  background:var(--card);padding:12px 14px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);
+  padding:12px 14px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);
   transition: none;
 }
 
@@ -533,12 +541,7 @@ header h1{margin:0;font-size:18px;letter-spacing:0.4px;opacity:0.95}
 .row.small .drinks{font-size:calc(0.25 * var(--row-small))}
 .drink-item{display:inline-flex;gap:8px;align-items:center;white-space:nowrap}
 .drink-item img{height:calc(0.18 * var(--row-big)); width:auto}
-/*.row.small .drink-item img{height:calc(0.35 * var(--row-small))} */
-.col.name {
-  display: flex;
-  align-items: center;
-  min-height: 100%;
-}
+.col.name {  display: flex;  align-items: center;  overflow: hidden;}
 
 
 /* separator dot */
@@ -821,10 +824,11 @@ header h1{margin:0;font-size:18px;letter-spacing:0.4px;opacity:0.95}
   }
 
   /* Teamnamen umbrechbar */
-  .team-name {
-    white-space: normal;
-    line-height: 1.1;
-  }
+.team-name {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 
   /* Punkte kleiner & platzsparend */
   .display.points {
