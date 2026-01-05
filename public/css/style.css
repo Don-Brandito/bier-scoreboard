@@ -543,7 +543,7 @@ header h1{margin:0;font-size:18px;letter-spacing:0.4px;opacity:0.95}
 
 /* >>> Marquee */
 #marqueeViewport {
-  max-height: calc(100vh - var(--header-height) - var(--footer-height) - 40px);
+  height: calc(var(--row-small) * 4);
   overflow: hidden;
 }
 
