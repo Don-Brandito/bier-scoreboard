@@ -522,7 +522,7 @@ header h1{margin:0;font-size:18px;letter-spacing:0.4px;opacity:0.95}
 .points small{font-size:12px;opacity:0.8;vertical-align:top;margin-left:6px}
 
 /* drinks */
-.drinks{display:flex;gap:10px;align-items:center;font-size:calc(0.13 * var(--row-big));opacity:0.95;max-width:220px; overflow:hidden; white-space:nowrap; flex-wrap:nowwrap}
+.drinks{display:flex;gap:10px;align-items:center;font-size:calc(0.13 * var(--row-big));opacity:0.95;max-width:none; overflow:visible; white-space:normal; flex-wrap:wrap}
 .row.small .drinks{font-size:calc(0.25 * var(--row-small))}
 .drink-item{display:inline-flex;gap:8px;align-items:center;white-space:nowrap}
 .drink-item img{height:calc(0.18 * var(--row-big)); width:auto}
@@ -560,6 +560,10 @@ header h1{margin:0;font-size:18px;letter-spacing:0.4px;opacity:0.95}
   display: flex;
   flex-direction: column;
   will-change: transform;
+}
+
+#marqueeTrack .row {
+  margin-bottom: 2px;
 }
 
 /* >>> Center-Spot */
