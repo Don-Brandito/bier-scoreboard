@@ -146,6 +146,7 @@ html, body {
   position: absolute;   /* NICHT fixed */
   top: 0;
   bottom: 0;
+  margin-top: -8px;
 
   display: flex;
   flex-direction: column;
@@ -171,8 +172,8 @@ html, body {
 }
 
 #scoreboardMask {
-  top: 70px;      /* Abstand vom Header */
-  bottom: 90px;   /* Abstand zum Footer */
+  top: 65px;
+  bottom: 100px;
 }
 
 
