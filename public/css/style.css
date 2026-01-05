@@ -1,103 +1,129 @@
-/* =========================================================
+/* ===========================================
    GLOBAL
-========================================================= */
+=========================================== */
 
 :root {
-  --header-height: 80px;
-  --footer-height: 80px;
-  --bg: #111;
-  --card: rgba(34,34,34,0.48);
-  --muted: rgba(255,255,255,0.10);
+  --header-height: 80px;   /* oder deine exakte HÃ¶he */
+  --footer-height: 80px;   /* oder deine exakte HÃ¶he */
 }
 
-* {
-  box-sizing: border-box;
-}
+
 
 html, body {
   width: 100%;
-  height: 100%;
-  margin: 0;
-  background: var(--bg);
+  min-height: 100vh;
+  overflow-x: hidden;
+  background: #111;
   color: #fff;
   font-family: Arial, sans-serif;
-  overflow: hidden;
+  
+  display: flex;
+  flex-direction: column;
 }
 
 
-/* =========================================================
+/* ===========================================
    HEADER
-========================================================= */
+=========================================== */
 
 #header {
-  position: relative;
   width: 100%;
-  height: var(--header-height);
   background: #4b0000;
+  padding: 40px 0; /* <<< wichtig: links/rechts 0 */
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  padding: 0 40px;
+  align-items: center;
   border-bottom: 4px solid #a00000;
+  box-sizing: border-box;
+  position: relative;
 }
 
 #header h1 {
+  color: #fff;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0;
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
-  margin: 0;
-  font-size: 1.5rem;
-  font-weight: 700;
+  text-align: center;
   white-space: nowrap;
 }
 
 .header-logo {
   height: 70px;
   width: auto;
+  object-fit: contain;
+  display: block;
+  margin: 0 40px; /* gleiche AbstÃ¤nde wie dein altes Layout */
 }
 
 
-/* =========================================================
-   FOOTER
-========================================================= */
+/* Diese Klassen bleiben, falls du sie zum Styling brauchst,
+   aber OHNE absolute Positionierung */
+.header-logo.left {
+  margin-right: auto;
+}
+
+.header-logo.right {
+  margin-left: auto;
+}
+
+
+/* ===========================================
+   Footer
+=========================================== */
 
 .footer-bar {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: var(--footer-height);
-  background: #000;
-  color: #fff;
-  text-align: center;
-  font-size: 0.85em;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
+    position: fixed;        /* immer am Bildschirm kleben */
+    bottom: 0;              /* unten abschlieÃŸen */
+    left: 0;
+    width: 100%;            /* volle Bildschirmbreite */
+    
+    background: #000;       /* schwarz */
+    color: #fff;            /* weiÃŸer Text */
+    
+    text-align: center;
+    padding: 1px 0;
+    font-size: 0.85em;
+    letter-spacing: 1px;
+
+    z-index: 9999;          /* Ã¼ber allem */
 }
 
-
-/* =========================================================
-   MASKEN
-========================================================= */
+/* ===========================================
+   MASKEN (links + rechts) â€” robust & fehlerfrei
+   (ersetze deinen bisherigen .mask-Block damit)
+=========================================== */
 
 .mask {
   position: fixed;
-  bottom: calc(var(--footer-height) + 10px);
-  width: clamp(80px, 14vw, 220px);
-  opacity: 0.25;
-  pointer-events: none;
+  bottom: 70px;                /* wie zuvor */
   z-index: 5;
+  pointer-events: none;
+
+  /* dezente Transparenz + Glow */
+  opacity: 0.25;
+  filter: drop-shadow(0 0 6px rgba(255,255,255,0.35));
+
+  /* responsive Breite (keine transform/scale) */
+  width: clamp(80px, 14vw, 220px);
+  height: auto;                /* Bild bleibt proportional */
+
+  /* Bild sauber darstellen */
+  object-fit: contain;
+  image-rendering: optimizeQuality;
 }
 
-.mask-left { left: 0; }
-.mask-right { right: 0; }
+/* Positionen */
+.mask-left  { left: 0;  transform: none; }
+.mask-right { right: 0; transform: none; }
 
 
-/* =========================================================
-   BACKGROUND LOGO
-========================================================= */
+
+/* ===========================================
+   BACKGROUND LOGO CENTER
+=========================================== */
 
 #logo-bg {
   position: fixed;
@@ -106,225 +132,715 @@ html, body {
   width: 80vmin;
   height: 80vmin;
   transform: translate(-50%, -50%);
-  background: url("../images/logo-bg.png") center / contain no-repeat;
+  background: url("../images/logo-bg.png") center/contain no-repeat !important;
   opacity: 0.15;
-  pointer-events: none;
   z-index: 1;
+  pointer-events: none;
+}
+
+/* ===========================================
+   SCOREBOARD
+=========================================== */
+
+#scoreboard{
+  position: absolute;   /* NICHT fixed */
+  top: 0;
+  bottom: 0;
+
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  background: rgba(0,0,0,0.15);
+  padding: 25px;
+  border-radius: 14px;
+  box-shadow: 0 0 25px rgba(0,0,0,0.35);
 }
 
 
-/* =========================================================
-   SCOREBOARD WRAP
-========================================================= */
-
-#scoreboard-wrap {
+#scoreboard-wrap{
   position: fixed;
   top: var(--header-height);
   bottom: var(--footer-height);
+
+  left: 0;
   width: 100%;
-  overflow: hidden;
+
+  overflow: hidden; /* verhindert Scrollbar */
   z-index: 2;
 }
 
-#scoreboard {
-  width: 100%;
-  padding: 20px 40px;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
 
 
-/* =========================================================
-   SCOREBOARD ROWS – STABIL
-========================================================= */
-
+/* === Zeilenbasis === */
 .row {
   display: grid;
-  grid-template-columns: 70px minmax(260px, 1fr) 320px;
+  grid-template-columns: 70px 1fr 1fr; 
   align-items: center;
-
-  height: 36px;
-  padding: 0 10px;
-  border-bottom: 1px solid rgba(255,255,255,0.1);
+  padding: 14px 10px;
+  border-bottom: 1px solid rgba(255,255,255,0.10);
   font-size: 18px;
+  height: 30px;
+  min-height: 30px;
+  position: relative;
+
 }
 
+/* === Top 3 doppelt so hoch === */
 .row.top {
-  height: 44px;
+  height: 30px;
+  min-height: 30px;
   font-size: 26px;
   background: rgba(255,255,255,0.08);
 }
 
-
-/* =========================================================
-   PLATZIERUNG
-========================================================= */
-
-.col.pos {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.col.pos img {
+/* === Position-Spalte === */
+.col.pos img.platz-icon {
   height: 30px;
   width: auto;
 }
 
+/* ===========================================
+   ÃœBERLAPPENDE ANZEIGE (POINTS + DRINKS)
+=========================================== */
 
-/* =========================================================
-   TEAMNAME
-========================================================= */
-
-.col.name {
-  display: flex;
-  align-items: center;
-  overflow: hidden;
-}
-
-.team-name {
-  font-weight: 800;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-
-/* =========================================================
-   SWITCH-SPALTE (PUNKTE / GETRÄNKE)
-========================================================= */
-
+/* Beide Ã¼berlagern sich exakt */
 .col-switch {
   position: relative;
+  width: 100%;
   height: 100%;
 }
 
+/* Beide liegen exakt an der gleichen Stelle */
 .display {
   position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
+  width: 100%;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  transition: opacity 0.45s ease-in-out;
   opacity: 0;
-  transition: opacity 0.4s ease;
 }
 
-.display.visible {
-  opacity: 1;
-}
+.display.visible { opacity: 1; }
+.display.hidden { opacity: 0; }
 
-
-/* =========================================================
-   PUNKTE
-========================================================= */
+/* ===========================================
+   Punkte rechtsbÃ¼ndig & stark hervorgehoben
+   Allgemeine StandardgrÃ¶ÃŸe (Platz 4+)
+=========================================== */
 
 .display.points {
-  font-weight: 900;
-  font-size: 22px;
-  line-height: 1;
-}
-
-.row.top .display.points {
-  font-size: 28px;
+  text-align: right;
+  font-size: 1px;       /* StandardgrÃ¶ÃŸe */
+  font-weight: 800;
+  letter-spacing: 1px;
+  line-height: 1;        /* verhindert Hoch-/Tiefspringen */
 }
 
 .display.points::after {
   content: " PKT";
-  font-size: 10px;
-  opacity: 0.7;
+  font-size: 8px;        /* StandardgrÃ¶ÃŸe */
+  font-weight: 500;
+  opacity: 0.8;
   margin-left: 6px;
-  vertical-align: top;
+  line-height: 1;
+}
+
+/* PlÃ¤tze 4+ kleiner erzwingen */
+.row.ticker .display.points {
+    font-size: 20px !important;
+}
+
+.row.ticker .display.points::after {
+    font-size: 8px !important;
+}
+
+/* ===========================================
+   Top 3 â€“ grÃ¶ÃŸere Punkte
+=========================================== */
+
+.row.top .display.points {
+  font-size: 28px;        /* groÃŸe Punkte */
+}
+
+.row.top .display.points::after {
+  font-size: 12px;        /* groÃŸes "PKT" */
 }
 
 
-/* =========================================================
-   GETRÄNKE – IMMER GLEICH GROSS, NIE UMBRUCH
-========================================================= */
+
+/* ===========================================
+   GetrÃ¤nke linksbÃ¼ndig, Icons klein
+=========================================== */
 
 .display.drinks {
-  justify-content: flex-start;
-  padding-left: 20px;
-  gap: 14px;
-  flex-wrap: nowrap;
+  text-align: left;
+  padding-left: 40px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 14px;
 }
 
-.drink-item {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  white-space: nowrap;
+.drink-item img{
+  width:18px;
+  height:18px;
+  flex-shrink:0;
 }
 
-.drink-item img {
-  width: 18px;
-  height: 18px;
-  object-fit: contain;
-  flex-shrink: 0;
+
+.drink-icon-row {
+  width: 22px;
+  height: 22px;
 }
 
-.drink-item span {
-  font-size: 14px;
+.drink-count {
+  font-size: 18px;
   font-weight: 600;
   opacity: 0.85;
 }
 
+/* ===========================================
+   PUNKTE FORMATIERUNG
+=========================================== */
 
-/* =========================================================
-   MARQUEE / SICHTFENSTER
-========================================================= */
+.col.points {
+  justify-content: flex-end;
+  font-size: 34px;
+  font-weight: 700;
+}
 
-#marqueeViewport {
-  height: calc(36px * 5);
+.col.points span.pkt {
+  font-size: 18px;
+  opacity: 0.8;
+  margin-left: 6px;
+}
+
+/* ===========================================
+   PUNKTEVERGABE â€“ FULL WIDTH TICKER
+=========================================== */
+
+#punktevergabe-wrap {
+  position: fixed;
+  bottom: 0;
+  width: 100vw;
+  left: 0;
+  z-index: 20;
+  background: #550000;
+  border-top: 4px solid #aa0000;
+  padding-top: 0px;
+  padding-bottom: 30px; /* Platz fÃ¼r den fixen Balken */
+}
+
+.punkte-title {
+    text-align: center;
+    font-size: 1.0em;
+    font-weight: 600;
+    color: #fff;
+    margin: 10px 0;
+    position: relative;
+}
+
+.punkte-title::after {
+    content: "";
+    display: block;
+    width: 100%;
+    height: 1px;
+    background: rgba(255,255,255,0.2);
+    margin: 6px auto;
+    margin-bottom: 0px;
+}
+
+#punktevergabe-inner {
+  width: 100%;
   overflow: hidden;
+  white-space: nowrap;
+  padding-bottom: 8px;
+  margin-top: 4px;
+}
+
+.ticker-track {
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+  animation-name: scrollLeft;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+@keyframes scrollLeft {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+.ticker-item {
+    display: inline-flex;
+    align-items: center;
+    width: 160px;          /* ðŸ‘‰ alle BlÃ¶cke gleich breit */
+    justify-content: center;  
+    margin: 0 10px;
+    text-align: left;      /* Textblock bleibt linksbÃ¼ndig */
+    gap: 15px;
+}
+
+.drink-icon {
+    height: 28px;
+    width: auto;
+    margin-right: 12px;
+}
+
+.drink-info-block {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    line-height: 1.1;
+}
+
+.drink-name {
+    font-size: 0.9em;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.drink-points {
+    font-size: 0.9em;
+    font-weight: 700;
+    opacity: 0.85;
+}
+
+.pkt-label {
+    font-size: 0.8em;
+    opacity: 0.6;
+    font-weight: 700;
+    margin-left: 2px;
+    letter-spacing: 1px;
+    position: relative;
+    top: -4px;                 /* ðŸ‘‰ hebt PKT nach oben */
+}
+
+
+.drink-icon-ticker { height: 28px; width: auto; }
+
+.separator {
+  opacity: 0.55;
+  padding: 0 14px;
+  font-size: 26px;
+}
+
+/* ===========================================
+   FLASH ANIMATION
+=========================================== */
+
+/* Subtiler Glow + Scale + leichtes Wackeln */
+.flash {
+    animation: rowFlash 0.9s ease-out;
+}
+
+@keyframes rowFlash {
+    0% {
+        background-color: rgba(255, 255, 255, 0.0);
+        transform: scale(1);
+        box-shadow: 0 0 0px rgba(255, 255, 255, 0);
+    }
+    20% {
+        background-color: rgba(255, 255, 255, 0.25);
+        transform: scale(1.03);
+        box-shadow: 0 0 15px rgba(255,255,255,0.6);
+    }
+    55% {
+        background-color: rgba(255,255,255,0.15);
+        transform: scale(0.98);
+    }
+    100% {
+        background-color: transparent;
+        transform: scale(1);
+        box-shadow: none;
+    }
+}
+
+/* FOOTER + misc */
+footer {
+  margin-top: 40px;
+  padding: 20px;
+  text-align: center;
+  opacity: 0.4;
+}
+
+/* rest of main CSS omitted for brevity in the zip; table CSS will follow after */
+
+:root{
+  --bg: #0f0f10;
+  --card: rgba(34,34,34,0.48);
+  --muted: rgba(255,255,255,0.08);
+  --row-big: 90px;
+  --row-small: 50px;
+}
+
+/* reset / base */
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;background:var(--bg);color:#fff;font-family:Inter,system-ui,"Segoe UI",Arial,sans-serif;-webkit-font-smoothing:antialiased}
+body{overflow:hidden}
+header{height:60px;display:flex;align-items:center;justify-content:center}
+header h1{margin:0;font-size:18px;letter-spacing:0.4px;opacity:0.95}
+
+/* app layout */
+#app{height:100vh;display:flex;flex-direction:column;gap:14px;padding:18px;align-items:center}
+
+/* TOP 3 fixed block */
+#top3{display:flex;flex-direction:column;gap:10px;margin-bottom: 10px}
+.top-row{
+  display:flex;align-items:center;justify-content:space-between;padding:14px;border-radius:12px;
+  background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.08));
+  border:1px solid var(--muted); box-shadow:0 12px 30px rgba(0,0,0,0.35);
+  height:var(--row-big);
+}
+
+/* shared row */
+.row{
+  display:flex;justify-content:space-between;align-items:center;
+  background:var(--card);padding:12px 14px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);
+  transition: none;
+}
+
+/* heights */
+.row.top{height:var(--row-big)}
+.row.small{height:var(--row-small)}
+
+/* left column */
+.left{display:flex;;align-items:center;gap:12px;min-width:180px;max-width:68%}
+.platz-icon{height:calc(0.8 * var(--row-big)); width:auto}
+.platz-text{font-size:calc(0.30 * var(--row-big));opacity:0.85;width:56px;text-align:right}
+
+/* team name */
+.team-name{font-weight:800;font-size:calc(0.24 * var(--row-big));line-height:1.05;color:#fff;text-shadow:0 6px 18px rgba(0,0,0,0.6); margin-bottom: 10px;}
+.row.small .team-name{font-size:calc(0.30 * var(--row-small)); margin-bottom: 5px;}
+
+/* right column */
+.right{display:flex;flex-direction:column;align-items:flex-end;min-width:180px;gap:6px}
+.points{font-weight:900;font-size:calc(0.35 * var(--row-big));padding:6px 10px;border-radius:8px;background:linear-gradient(180deg, rgba(255,255,255,0.06), rgba(0,0,0,0.18))}
+.row.small .points{font-size:calc(0.30 * var(--row-small));padding:4px 8px}
+.points small{font-size:12px;opacity:0.8;vertical-align:top;margin-left:6px}
+
+/* drinks */
+.drinks{display:flex;gap:10px;align-items:center;font-size:calc(0.13 * var(--row-big));opacity:0.95;max-width:220px; overflow:hidden; white-space:nowrap; flex-wrap:nowwrap}
+.row.small .drinks{font-size:calc(0.25 * var(--row-small))}
+.drink-item{display:inline-flex;gap:8px;align-items:center;white-space:nowrap}
+.drink-item img{height:calc(0.18 * var(--row-big)); width:auto}
+.row.small .drink-item img{height:calc(0.35 * var(--row-small))}
+
+/* separator dot */
+.mid-dot{color:rgba(200,200,200,1.0);margin:0 6px;align-self:center;font-size:calc(0.25 * var(--row-big))}
+.row.small .mid-dot{font-size:calc(0.25 * var(--row-small))}
+
+/* etc... rest of table CSS already included above */
+
+
+
+/* >>> Marquee */
+#marqueeViewport {
+  height: calc(var(--row-small) * 4); /* z.B. 5 statt 6 */
+  overflow: hidden;
+}
+
+.fade-out {
+  opacity: 0;
+  transition: opacity 400ms linear;
+}
+
+.fade-in {
+  opacity: 1;
+  transition: opacity 400ms linear;
+}
+
+.marquee-hidden {
+  visibility: hidden;
 }
 
 #marqueeTrack {
   display: flex;
   flex-direction: column;
+  will-change: transform;
+}
+
+/* >>> Center-Spot */
+/* center spotlight overlay */
+#centerSpot{ position:fixed; left:0; top:0; right:0; bottom:0; display:flex; align-items:center; justify-content:center; pointer-events:none; z-index:2147483646; }
+#spotBackdrop{ position:absolute; left:0; top:0; right:0; bottom:0; background:rgba(0,0,0,0.88); opacity:0; transition:opacity 260ms ease; pointer-events:none; z-index:2147483600; }
+#centerSpot.show #spotBackdrop{ opacity:1; pointer-events:auto; }
+
+/* spot card */
+.spot-card{ position:relative; z-index:2147483647; width:min(1100px,94%); background:rgba(20,20,20,0.95); border-radius:14px; padding:18px; border:1px solid rgba(255,255,255,0.06); display:flex; gap:12px; flex-direction:column; box-shadow: 0 0 35px rgba(255,0,0,0.75), 0 0 90px rgba(255,0,0,0.55), 0 0 160px rgba(255,0,0,0.45), 0 50px 120px rgba(0,0,0,0.85); transform:translateY(8px) scale(0.98); opacity:0; transition:transform 320ms cubic-bezier(.2,.9,.3,1), opacity 320ms ease; pointer-events:none; }
+#centerSpot.show .spot-card{ transform:translateY(0) scale(1); opacity:1; pointer-events:auto; }
+
+/* top area (original look) inside card */
+.spot-top{ display:flex; justify-content:space-between; align-items:center; gap:12px; padding-bottom:8px; border-bottom:1px solid rgba(255,255,255,0.03); }
+.spot-left{ display:flex; gap:14px; align-items:center; }
+.spot-platz{ font-size:28px; opacity:0.95; width:56px; text-align:right; }
+.spot-name{ font-size:30px; font-weight:900; }
+.spot-total-drinks{ opacity:0.95; margin-top:6px; font-size:14px; display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+
+/* top points */
+.spot-points{ font-size:48px; font-weight:900; transition: color 160ms ease, transform 160ms ease, text-shadow 160ms ease; }
+
+/* point impact animation (nice 2-step pulse) */
+@keyframes pointImpact {
+  0% { color: #fff; transform: scale(1); text-shadow:none; }
+  20% { color:#ff2a2a; transform: scale(1.18); text-shadow: 0 0 18px rgba(255,42,42,0.9), 0 0 36px rgba(255,42,42,0.45); }
+  50% { color:#ff2a2a; transform: scale(0.92); text-shadow: 0 0 10px rgba(255,42,42,0.6); }
+  100%{ color:#fff; transform: scale(1); text-shadow:none; }
+}
+.point-impact{ animation: pointImpact 0.5s cubic-bezier(.2,.9,.3,1); }
+
+/* bottom area: current order */
+.spot-bottom{ display:flex; justify-content:space-between; align-items:center; gap:12px; padding-top:12px; }
+
+/* order items row (single line, scroll horizontally if too many) */
+.order-items{
+  display:flex;
+  gap:12px;
+  align-items:center;
+  overflow-x:auto;
+  padding-bottom:6px;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* each order item */
+.order-item{
+  display:flex;
+  gap:4px;
+  align-items:center;
+  min-width:110px;
+  padding:4px 6px;
+  background:rgba(255,255,255,0.02);
+  border-radius:10px;
+  border:1px solid rgba(255,255,255,0.03);
+  flex: 0 0 auto;
+}
+.order-item img{ height:22px; width:auto }
+.order-item .order-meta{ display:flex; flex-direction:column; }
+.order-item .order-name{ font-size:13px; opacity:0.95; }
+.order-item .delta-count{ font-weight:800; margin-top:6px; font-size:16px; }
+
+/* order points block */
+.order-points{ min-width:120px; display:flex; align-items:center; justify-content:center; }
+.order-points-label{ font-size:20px; font-weight:900; }
+
+/* confetti canvas (on top) */
+#confettiCanvas { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 2147483650; }
+
+/* debug controls */
+.debug{position:fixed;right:12px;bottom:12px;z-index:12000;display:flex;gap:8px;align-items:center;background:rgba(0,0,0,0.36);padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.04)}
+.debug button{background:#fff;color:#111;padding:6px 8px;border-radius:6px;border:0;cursor:pointer}
+.debug label{font-size:13px;opacity:0.9;color:#fff}
+
+/* responsive */
+@media (max-width:980px){
+  .left{min-width:120px;max-width:58%}
+  .team-name{font-size:16px}
+  .points{font-size:22px}
+  .spot-name{font-size:22px}
+  .spot-points{font-size:34px}
+  .spot-card{padding:14px}
+  .order-item{ min-width:80px }
+}
+
+#spot-platz .platz-icon {
+  width: 75px;
+  height: auto;
+  margin-right: 6px;
+  vertical-align: middle;
 }
 
 
-/* =========================================================
-   FLASH ANIMATION
-========================================================= */
-
-.flash {
-  animation: rowFlash 0.9s ease-out;
+/* >>> Punkteanzeige*/
+#punktevergabe-inner {
+  overflow: hidden;
 }
 
-@keyframes rowFlash {
-  0% { background: transparent; }
-  20% { background: rgba(255,255,255,0.25); }
-  100% { background: transparent; }
+.punkte-marquee {
+  width: 100%;
+  overflow: hidden;
+}
+
+.punkte-marquee-track {
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+  gap: 14px;
+
+  animation: punkte-marquee-move 22s linear infinite;
+}
+
+.punkte-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  font-size: 18px;
+}
+
+.punkte-icon {
+  height: 22px;
+  width: auto;
+  display: block;
+}
+
+.punkte-text {
+  white-space: nowrap;
+}
+
+.punkte-separator {
+  opacity: 0.6;
+  font-size: 18px;
+  padding: 0 6px;
+  padding: 0 25px;   /* â† Abstand links & rechts vom Punkt */
+  color: #ffffff;
+  opacity: 1;
+}
+
+/* Endlos von rechts nach links */
+@keyframes punkte-marquee-move {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.punkte-text {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 4px;
+}
+
+.punkte-value {
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 1;
+}
+
+.punkte-unit {
+  font-size: 10px;  
+  line-height: 1;
+  color: rgb(110, 110, 110);
+  position: relative;
+  top: -1px; /* Hochstellung */
+  font-weight: 800;
 }
 
 
-/* =========================================================
-   RESPONSIVE – NUR MOBILE
-========================================================= */
+/* =====================================================
+   SMARTPHONE RESPONSIVE (APPEND ONLY)
+   NUR Mobile – Desktop & TV bleiben unberührt
+===================================================== */
 
 @media (max-width: 768px) {
 
-  .mask { display: none; }
-
-  #scoreboard {
-    padding: 10px;
+  /* Masken aus */
+  .mask,
+  .mask-left,
+  .mask-right {
+    display: none !important;
   }
 
+  /* Header kompakter */
+  #header {
+    padding: 20px 0;
+  }
+
+  #header h1 {
+    font-size: 1.1rem;
+  }
+
+  .header-logo {
+    height: 44px;
+    margin: 0 16px;
+  }
+
+  /* Scoreboard nutzt volle Breite */
+  #scoreboard-wrap {
+    left: 0;
+    right: 0;
+  }
+
+  #scoreboard {
+    padding: 12px;
+    gap: 8px;
+    border-radius: 0;
+  }
+
+  /* Reihen kompakter */
   .row {
     grid-template-columns: 42px 1fr 1fr;
     font-size: 14px;
+    padding: 8px 6px;
+    min-height: 26px;
     height: auto;
-    padding: 6px;
   }
 
+  /* Top 3 weiterhin hervorgehoben, aber nicht riesig */
+  .row.top {
+    font-size: 18px;
+  }
+
+  /* Positions-Icons kleiner */
+  .col.pos img.platz-icon {
+    height: 22px;
+  }
+
+  /* Teamnamen umbrechbar */
+  .team-name {
+    white-space: normal;
+    line-height: 1.1;
+  }
+
+  /* Punkte kleiner & platzsparend */
   .display.points {
-    font-size: 16px;
+    font-size: 16px !important;
+  }
+
+  .display.points::after {
+    font-size: 9px !important;
+    margin-left: 4px;
+  }
+
+  /* Getränke-Icons kompakter */
+  .display.drinks {
+    padding-left: 24px;
+    gap: 6px 10px;
   }
 
   .drink-item img {
     width: 14px;
     height: 14px;
   }
+
+  .drink-count {
+    font-size: 14px;
+  }
+
+  /* Punktevergabe-Ticker besser lesbar */
+  #punktevergabe-wrap {
+    padding-bottom: 18px;
+  }
+
+  .punkte-title {
+    font-size: 0.9em;
+  }
+
+  .ticker-item {
+    width: 130px;
+    gap: 10px;
+  }
+
+  .drink-icon {
+    height: 22px;
+  }
+
+  .drink-name,
+  .drink-points {
+    font-size: 0.8em;
+  }
+
 }
