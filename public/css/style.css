@@ -543,8 +543,7 @@ header h1{margin:0;font-size:18px;letter-spacing:0.4px;opacity:0.95}
 
 /* >>> Marquee */
 #marqueeViewport {
-  height: calc(var(--row-small) * 4); /* z.B. 5 statt 6 */
-  overflow: hidden;
+  height: calc(var(--row-small) * 4,2); /* z.B. 5 statt 6 */
 }
 
 .fade-out {
